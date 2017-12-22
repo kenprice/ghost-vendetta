@@ -14,14 +14,17 @@ const unsigned char EXPLOSION = 2;
 const unsigned char WALL = 10;
 const unsigned char BRICK = 11;
 
-unsigned int playerx = 16;
-unsigned int playery = 16;
-unsigned int player_lastx = 16;
-unsigned int player_lasty = 16;
-unsigned int player_dx = 0;
-unsigned int player_dy = 0;
 unsigned char game_frame = 0;
-unsigned char player_frame = 0;
+
+struct {
+  int x = 16;
+  int y = 16;
+  int last_x = 16;
+  int last_y = 16;
+  int dx = 0;
+  int dy = 0;
+  unsigned char frame = 0;
+} player;
 
 typedef struct {
   unsigned char id;
@@ -59,8 +62,8 @@ void draw_explosion(int x, int y, int wx, int wy) {
 }
 
 void draw() {
-  unsigned char player_sprite = player_frame / 20 % 4;
-  if (player_frame > 60) player_frame = 0;
+  unsigned char player_sprite = player.frame / 20 % 4;
+  if (player.frame > 60) player.frame = 0;
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
@@ -69,8 +72,8 @@ void draw() {
 
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
-      int wx = i * 16 + cam_x_offset + 16 - playerx;
-      int wy = j * 16 + cam_y_offset + 16 - playery;
+      int wx = i * 16 + cam_x_offset + 16 - player.x;
+      int wy = j * 16 + cam_y_offset + 16 - player.y;
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
       if (objects[i][j].id == FIRE) {
@@ -89,25 +92,25 @@ void draw() {
   }
 
   arduboy.setCursor(0, 0);
-  arduboy.print(playerx);
+  arduboy.print(player.x);
   
   arduboy.setCursor(32, 0);
-  arduboy.print(playery);
+  arduboy.print(player.y);
 }
 
 void player_move(int dx, int dy) {
-  playerx += dx;
-  playery += dy;
+  player.x += dx;
+  player.y += dy;
   player_collision(dx, dy);
 }
 
 void player_collision(int dx, int dy) {
-  int x = playerx;
-  int y = playery;
-  int start_x = playerx / 16 - 1 < 0 ? 0 : playerx / 16 - 1;
-  int start_y = playery / 16 - 1 < 0 ? 0 : playery / 16 - 1;
-  int end_x = playerx / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : playerx / 16 + 1;
-  int end_y = playery / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : playery / 16 + 1;
+  int x = player.x;
+  int y = player.y;
+  int start_x = player.x / 16 - 1 < 0 ? 0 : player.x / 16 - 1;
+  int start_y = player.y / 16 - 1 < 0 ? 0 : player.y / 16 - 1;
+  int end_x = player.x / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : player.x / 16 + 1;
+  int end_y = player.y / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : player.y / 16 + 1;
   
   for (int i = start_x; i <= end_x; i++) {
     for (int j = start_y; j <= end_y; j++) {
@@ -116,13 +119,13 @@ void player_collision(int dx, int dy) {
       bool is_collided = x < i * 16 + 16 && x + 16 > i * 16 && y < j * 16 + 16 && y + 16 > j * 16;
 
       if (is_collided) {
-        if (dx != 0 && j > 1             && dy != -1 && objects[i][j-1].id < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     playery -= 1;
-        if (dx != 0 && j < BOARD_DIM - 1 && dy != 1  && objects[i][j+1].id < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) playery += 1;
-        if (dy != 0 && i > 1             && dx != -1 && objects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     playerx -= 1;
-        if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && objects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) playerx += 1;
+        if (dx != 0 && j > 1             && dy != -1 && objects[i][j-1].id < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y -= 1;
+        if (dx != 0 && j < BOARD_DIM - 1 && dy != 1  && objects[i][j+1].id < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) player.y += 1;
+        if (dy != 0 && i > 1             && dx != -1 && objects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
+        if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && objects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
-        playerx -= dx;
-        playery -= dy;
+        player.x -= dx;
+        player.y -= dy;
         return;
       }
     }
@@ -166,34 +169,34 @@ void loop() {
   arduboy.clear();
 
   draw();
-  player_dx = 0;
-  player_dy = 0;
+  player.dx = 0;
+  player.dy = 0;
 
   bool dpad_pressed = arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON);
-  if (dpad_pressed) player_frame++;
+  if (dpad_pressed) player.frame++;
 
   if(arduboy.pressed(B_BUTTON)) {
-    int fx = (playerx+8)/16;
-    int fy = (playery+8)/16;
+    int fx = (player.x+8)/16;
+    int fy = (player.y+8)/16;
     objects[fx][fy].id = FIRE;
     objects[fx][fy].lifetime = 0;
   }
   if(arduboy.pressed(LEFT_BUTTON)) {
-    player_dx = -1;
+    player.dx = -1;
   }
   if(arduboy.pressed(RIGHT_BUTTON)) {
-    player_dx = 1;
+    player.dx = 1;
   }
   if(arduboy.pressed(UP_BUTTON)) {
-    player_dy = -1;
+    player.dy = -1;
   }
   if(arduboy.pressed(DOWN_BUTTON)) {
-    player_dy = 1;
+    player.dy = 1;
   }
-  if (player_dx)
-    player_move(player_dx, 0);
-  if (player_dy)
-    player_move(0, player_dy);
+  if (player.dx)
+    player_move(player.dx, 0);
+  if (player.dy)
+    player_move(0, player.dy);
 
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
