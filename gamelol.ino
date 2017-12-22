@@ -18,9 +18,20 @@ void reset_game_state() {
   player.dx = 0;
   player.dy = 0;
   player.frame = 0;
+  player.state = ALIVE;
+}
+
+void clear_board() {
+  for (int i = 0; i < BOARD_DIM; i++) {
+    for (int j = 0; j < BOARD_DIM; j++) {
+      objects[i][j].id = 0;
+      objects[i][j].lifetime = 0;
+    }
+  }
 }
 
 void setup_board1() {
+  clear_board();
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
       bool is_wall = i == 0 || i == BOARD_DIM - 1 || j == 0 || j == BOARD_DIM - 1 || ((i + 1) % 2 && (j + 1) % 2);
@@ -49,7 +60,7 @@ void draw_explosion(int x, int y, int wx, int wy) {
 }
 
 void draw() {
-  unsigned char player_sprite = player.frame / 20 % 4;
+  unsigned char player_sprite = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
@@ -87,10 +98,17 @@ void draw() {
 void player_move(int dx, int dy) {
   player.x += dx;
   player.y += dy;
-  player_collision(dx, dy);
+  player_check_collision(dx, dy);
 }
 
-void player_collision(int dx, int dy) {
+/**
+ * Returns true if player overlaps with board coordinates at (x, y)
+ */
+bool player_collided_with(int bx, int by) {
+  return player.x < bx * 16 + 16 && player.x + 16 > bx * 16 && player.y < by * 16 + 16 && player.y + 16 > by * 16;
+}
+
+void player_check_collision(int dx, int dy) {
   int x = player.x;
   int y = player.y;
   int start_x = player.x / 16 - 1 < 0 ? 0 : player.x / 16 - 1;
@@ -100,9 +118,7 @@ void player_collision(int dx, int dy) {
   
   for (int i = start_x; i <= end_x; i++) {
     for (int j = start_y; j <= end_y; j++) {
-      if (objects[i][j].id < WALL) continue;
-
-      bool is_collided = x < i * 16 + 16 && x + 16 > i * 16 && y < j * 16 + 16 && y + 16 > j * 16;
+      bool is_collided = player_collided_with(i, j);
 
       if (is_collided) {
         if (dx != 0 && j > 1             && dy != -1 && objects[i][j-1].id < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y -= 1;
@@ -110,9 +126,11 @@ void player_collision(int dx, int dy) {
         if (dy != 0 && i > 1             && dx != -1 && objects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
         if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && objects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
-        player.x -= dx;
-        player.y -= dy;
-        return;
+        if (objects[i][j].id >= WALL) {
+          player.x -= dx;
+          player.y -= dy;
+          return;
+        }
       }
     }
   }
@@ -126,37 +144,26 @@ void destroy(int x, int y) {
     objects[x][y].id = EXPLOSION;
     objects[x][y].lifetime = 25;
   }
+  if (player_collided_with(x, y)) {
+    player.frame = 0;
+    player.state = DYING;
+  }
 }
 
 void explosion(int x, int y) {
   objects[x][y].lifetime = 0;
   objects[x][y].id = 0;
-  
+
+  destroy(x, y);
   destroy(x-1, y);
   destroy(x+1, y);
   destroy(x, y-1);
   destroy(x, y+1);
 }
 
-void setup() {
-  arduboy.beginNoLogo();
-  arduboy.clear();
-  arduboy.setFrameRate(40);
-  setup_board1();
-}
-
-void loop() {
-  if (!arduboy.nextFrame())
+void handle_player_move() {
+  if (player.state == DYING)
     return;
-
-  game_frame++;
-  if (game_frame > 100) game_frame = 0;
-
-  arduboy.clear();
-
-  draw();
-  player.dx = 0;
-  player.dy = 0;
 
   bool dpad_pressed = arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON);
   if (dpad_pressed) player.frame = player.frame + 1 % 60;
@@ -183,6 +190,37 @@ void loop() {
     player_move(player.dx, 0);
   if (player.dy)
     player_move(0, player.dy);
+}
+
+void setup() {
+  arduboy.beginNoLogo();
+  arduboy.clear();
+  arduboy.setFrameRate(40);
+  setup_board1();
+}
+
+void loop() {
+  if (!arduboy.nextFrame())
+    return;
+
+  game_frame++;
+  if (game_frame > 100) game_frame = 0;
+
+  arduboy.clear();
+
+  draw();
+  player.dx = 0;
+  player.dy = 0;
+
+  handle_player_move();
+  player_check_collision(0, 0); // See if collided with EXPLOSION, trigger handling
+
+  if (player.state == DYING) {
+    player.frame++;
+    if (player.frame > 20) {
+      reset_game_state();
+    }
+  }
 
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
