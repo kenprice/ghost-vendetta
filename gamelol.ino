@@ -1,37 +1,24 @@
 #include <Arduboy.h>
 #include "bitmap.h"
 #include "levels.h"
+#include "player.h"
+#include "objects.h"
 Arduboy arduboy;
-
-const unsigned char SPRITE_COL_OFFSET = 224;
-const unsigned char PROGMEM GHOST_SPRITES_OFFSET = 32;
-const unsigned char PROGMEM FIRE_SPRITES_OFFSET = 96;
-const unsigned char PROGMEM WALL_SPRITES_OFFSET = 192;
-const unsigned char PROGMEM BRICK_SPRITES_OFFSET = 128;
-
-const unsigned char FIRE = 1;
-const unsigned char EXPLOSION = 2;
-const unsigned char WALL = 10;
-const unsigned char BRICK = 11;
 
 unsigned char game_frame = 0;
 
-struct {
-  int x = 16;
-  int y = 16;
-  int last_x = 16;
-  int last_y = 16;
-  int dx = 0;
-  int dy = 0;
-  unsigned char frame = 0;
-} player;
-
-typedef struct {
-  unsigned char id;
-  unsigned char lifetime;
-} game_object;
-
 game_object objects[BOARD_DIM][BOARD_DIM];
+
+void reset_game_state() {
+  setup_board1();
+  player.x = 16;
+  player.y = 16;
+  player.last_x = 16;
+  player.last_y = 16;
+  player.dx = 0;
+  player.dy = 0;
+  player.frame = 0;
+}
 
 void setup_board1() {
   for (int i = 0; i < BOARD_DIM; i++) {
@@ -63,7 +50,6 @@ void draw_explosion(int x, int y, int wx, int wy) {
 
 void draw() {
   unsigned char player_sprite = player.frame / 20 % 4;
-  if (player.frame > 60) player.frame = 0;
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
@@ -173,7 +159,7 @@ void loop() {
   player.dy = 0;
 
   bool dpad_pressed = arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON);
-  if (dpad_pressed) player.frame++;
+  if (dpad_pressed) player.frame = player.frame + 1 % 60;
 
   if(arduboy.pressed(B_BUTTON)) {
     int fx = (player.x+8)/16;
