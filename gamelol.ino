@@ -43,19 +43,6 @@ void setup_board1() {
   }
 }
 
-void draw_explosion(int x, int y, int wx, int wy) {
-  arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-
-  if (objects[x-1][y].id < WALL)
-    arduboy.drawBitmap(wx - 32, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);  // LEFT
-  if (objects[x][y-1].id < WALL)
-    arduboy.drawBitmap(wx - 16, wy - 32, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);  // DOWN
-  if (objects[x+1][y].id < WALL)
-    arduboy.drawBitmap(wx, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);       // RIGHT
-  if (objects[x][y+1].id < WALL)
-    arduboy.drawBitmap(wx - 16, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);       // UP
-}
-
 void draw() {
   unsigned char player_sprite = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
 
@@ -80,7 +67,7 @@ void draw() {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + BRICK_SPRITES_OFFSET, 16, 16, WHITE);
       }
       if (objects[i][j].id == EXPLOSION) {
-        draw_explosion(i, j, wx, wy);
+        arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
       }
     }
   }
@@ -123,6 +110,11 @@ void player_check_collision(int dx, int dy) {
         if (dy != 0 && i > 1             && dx != -1 && objects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
         if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && objects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
+        if (objects[i][j].id == EXPLOSION) {
+          player.frame = 0;
+          player.state = DYING;
+        }
+
         if (objects[i][j].id >= WALL) {
           player.x -= dx;
           player.y -= dy;
@@ -134,12 +126,11 @@ void player_check_collision(int dx, int dy) {
 }
 
 void destroy(int x, int y) {
-  if (objects[x][y].id == BRICK)
+  if (objects[x][y].id == BRICK) {
     objects[x][y].id = 0;
+  }
   if (objects[x][y].id == FIRE) {
     explosion(x, y);
-    objects[x][y].id = EXPLOSION;
-    objects[x][y].lifetime = 25;
   }
   if (player_collided_with(x, y)) {
     player.frame = 0;
@@ -148,14 +139,16 @@ void destroy(int x, int y) {
 }
 
 void explosion(int x, int y) {
-  objects[x][y].lifetime = 0;
-  objects[x][y].id = 0;
-
-  destroy(x, y);
-  destroy(x-1, y);
-  destroy(x+1, y);
-  destroy(x, y-1);
-  destroy(x, y+1);
+  for (int i = -1; i <= 1; i++) {
+    for (int j = -1; j <= 1; j++) {
+      if (abs(i) == abs(j) && i != 0) continue;
+      if (objects[x+i][y+j].id == 0 || objects[x+i][y+j].id == FIRE) {
+        objects[x+i][y+j].id = EXPLOSION;
+        objects[x+i][y+j].lifetime = 0;
+      }
+      destroy(x + i, y + j);
+    }
+  }
 }
 
 void handle_player_move() {
@@ -226,12 +219,14 @@ void loop() {
         if (objects[i][j].lifetime > 200) {
           objects[i][j].lifetime = 0;
           objects[i][j].id = EXPLOSION;
+          explosion(i, j);
          }
       }
       if (objects[i][j].id == EXPLOSION) {
         objects[i][j].lifetime++;
         if (objects[i][j].lifetime > 25) {
-          explosion(i, j);
+          objects[i][j].lifetime = 0;
+          objects[i][j].id = 0;
         }
       }
     }
