@@ -1,7 +1,5 @@
 #include <Arduboy.h>
 #include "bitmap.h"
-#include "player.h"
-#include "objects.h"
 #include "game_state.h"
 #include "globals.h"
 Arduboy arduboy;
@@ -99,7 +97,7 @@ void player_check_collision(int dx, int dy) {
   int start_y = player.y / 16 - 1 < 0 ? 0 : player.y / 16 - 1;
   int end_x = player.x / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : player.x / 16 + 1;
   int end_y = player.y / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : player.y / 16 + 1;
-  
+
   for (int i = start_x; i <= end_x; i++) {
     for (int j = start_y; j <= end_y; j++) {
       bool is_collided = player_collided_with(i, j);
@@ -186,7 +184,7 @@ void setup() {
   arduboy.beginNoLogo();
   arduboy.clear();
   arduboy.setFrameRate(40);
-  setup_board1();
+  reset_game_state();
 }
 
 void loop() {
