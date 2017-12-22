@@ -1,13 +1,10 @@
 #include <Arduboy.h>
 #include "bitmap.h"
-#include "levels.h"
 #include "player.h"
 #include "objects.h"
+#include "game_state.h"
+#include "globals.h"
 Arduboy arduboy;
-
-unsigned char game_frame = 0;
-
-game_object objects[BOARD_DIM][BOARD_DIM];
 
 void reset_game_state() {
   setup_board1();
