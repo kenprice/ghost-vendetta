@@ -1,11 +1,15 @@
-#include "globals.h"
-
 #ifndef _GAME_STATE
 #define _GAME_STATE
+#include "globals.h"
 
-unsigned char game_frame;
+extern unsigned char game_frame;
 
-game_object objects[BOARD_DIM][BOARD_DIM];
+typedef struct {
+  unsigned char id;
+  unsigned char lifetime;
+} GameObject;
+
+extern GameObject gameObjects[BOARD_DIM][BOARD_DIM];
 
 enum alive_state { ALIVE, DYING };
 
@@ -18,8 +22,7 @@ typedef struct {
   int dy;
   unsigned char frame;
   enum alive_state state;
-} actor_t;
+} Actor;
 
-actor_t player;
-
+extern Actor player;
 #endif
