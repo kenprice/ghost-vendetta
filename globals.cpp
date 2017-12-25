@@ -2,3 +2,5 @@
 
 Arduboy2Base arduboy;
 byte gameState = STATE_GAME_PREPARE_LEVEL;
+
+unsigned char game_frame;

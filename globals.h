@@ -22,7 +22,11 @@
 #define STATE_GAME_PAUSE         10
 #define STATE_GAME_END           11
 
+// main objects //////////////////////////////////////////////////////////////
+
 extern Arduboy2Base arduboy;
 extern byte gameState;
+
+extern unsigned char game_frame;
 
 #endif

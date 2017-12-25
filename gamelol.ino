@@ -14,7 +14,7 @@ const FunctionPointer PROGMEM mainGameLoop[] =
   stateGamePrepareLevel,
   stateGameNextLevel,
   stateGamePlaying,
-  NULL,
+  stateGameOver,
   NULL,
   NULL
 };
@@ -32,13 +32,7 @@ void loop() {
   ((FunctionPointer) pgm_read_word (&mainGameLoop[gameState]))();
   arduboy.display();
 
-  /*
   game_frame++;
   if (game_frame > 100) game_frame = 0;
-
-  arduboy.clear();
-
-
-  */
 }
 
