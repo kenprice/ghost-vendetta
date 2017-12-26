@@ -9,8 +9,9 @@ typedef struct {
   int frame;
   byte x;
   byte y;
-  bool active = false;
-  bool exploding = false;
+  byte blastRadius = 1;
+  bool active;
+  bool exploding;
 } Bomb;
 
 extern Bomb bombs[MAX_BOMBS];

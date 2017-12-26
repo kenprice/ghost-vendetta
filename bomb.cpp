@@ -10,27 +10,58 @@ void initializeBombs() {
   for (int i = 0; i < MAX_BOMBS; i++) {
     bombs[i].active = false;
     bombs[i].exploding = false;
+    bombs[i].blastRadius = 1;
   }
 }
 
-void explosion(int x, int y);
-
-void destroy(int x, int y) {
+/**
+ * Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
+ */
+bool destroyBrick(int x, int y) {
   if (gameObjects[x][y].id == BRICK) {
     gameObjects[x][y].id = 0;
+    return true;
   }
-  // TODO: Implement chain explosions
+  return false;
+}
+
+bool destroyPlayer(int x, int y) {
   if (playerCollidedWith(x, y)) {
     killPlayer();
+  }  
+}
+
+void destroyBricks(Bomb bomb) {
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (destroyBrick(bomb.x + i, bomb.y) || gameObjects[bomb.x + i][bomb.y].id == WALL) break;
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (destroyBrick(bomb.x - i, bomb.y) || gameObjects[bomb.x - i][bomb.y].id == WALL) break;
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (destroyBrick(bomb.x, bomb.y + 1) || gameObjects[bomb.x][bomb.y + i].id == WALL) break;
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (destroyBrick(bomb.x, bomb.y - 1) || gameObjects[bomb.x][bomb.y - i].id == WALL) break;
   }
 }
 
-void explosion(int x, int y) {
-  for (int i = -1; i <= 1; i++) {
-    for (int j = -1; j <= 1; j++) {
-      if (abs(i) == abs(j) && i != 0) continue;
-      destroy(x + i, y + j);
-    }
+void explosion(Bomb bomb) {
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (gameObjects[bomb.x + i][bomb.y].id == WALL) break;
+    destroyPlayer(bomb.x + i, bomb.y);
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (gameObjects[bomb.x - i][bomb.y].id == WALL) break;
+    destroyPlayer(bomb.x - i, bomb.y);
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (gameObjects[bomb.x][bomb.y + i].id == WALL) break;
+    destroyPlayer(bomb.x, bomb.y + i);
+  }
+  for (int i = 1; i <= bomb.blastRadius; i++) {
+    if (gameObjects[bomb.x][bomb.y - i].id == WALL) break;
+    destroyPlayer(bomb.x, bomb.y- i);
   }
 }
 
@@ -53,9 +84,10 @@ void updateBomb(Bomb& bomb) {
   if (!bomb.exploding && bomb.lifetime > 200) {
     bomb.lifetime = 0;
     bomb.exploding = true;
+    destroyBricks(bomb);
   }
   if (bomb.exploding) {
-    explosion(bomb.x, bomb.y);    
+    explosion(bomb);
   }
   if (bomb.exploding && bomb.lifetime > 25) {
     bomb.active = false;
@@ -75,11 +107,27 @@ void drawBomb(Bomb bomb) {
   int cam_y_offset = 64/2-8;
   int wx = bomb.x * 16 + cam_x_offset - player.x;
   int wy = bomb.y * 16 + cam_y_offset - player.y;
-  // bomb
-  if (bomb.active) {
-    arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE); 
-  } else {
+
+  if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    for (int i = 1; i <= bomb.blastRadius; i++) {
+      if (bomb.x + i > BOARD_DIM || gameObjects[bomb.x + i][bomb.y].id >= WALL) break;
+      arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    }
+    for (int i = 1; i <= bomb.blastRadius; i++) {
+      if (bomb.x - i < 0 || gameObjects[bomb.x - i][bomb.y].id >= WALL) break;
+      arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    }
+    for (int i = 1; i <= bomb.blastRadius; i++) {
+      if (bomb.y + i > BOARD_DIM || gameObjects[bomb.x][bomb.y + i].id >= WALL) break;
+      arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    }
+    for (int i = 1; i <= bomb.blastRadius; i++) {
+      if (bomb.y - i < 0 || gameObjects[bomb.x][bomb.y - i].id >= WALL) break;
+      arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    }
+  } else {
+    arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE); 
   }
 }
 

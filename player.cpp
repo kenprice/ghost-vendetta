@@ -94,11 +94,6 @@ void playerCheckCollision(int dx, int dy) {
         if (dy != 0 && i > 1             && dx != -1 && gameObjects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
         if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && gameObjects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
-        if (gameObjects[i][j].id == EXPLOSION) {
-          player.frame = 0;
-          player.state = DYING;
-        }
-
         if (gameObjects[i][j].id >= WALL) {
           player.x -= dx;
           player.y -= dy;
