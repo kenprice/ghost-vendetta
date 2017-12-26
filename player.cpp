@@ -5,7 +5,20 @@
 
 Player player;
 
-void handle_player_move() {
+void initializePlayer() {
+  player.x = 16;
+  player.y = 16;
+  player.last_x = 16;
+  player.last_y = 16;
+  player.dx = 0;
+  player.dy = 0;
+  player.frame = 0;
+  player.state = ALIVE;
+  player.cooldown = 100;
+  player.cooldownCounter = 0;
+}
+
+void handlePlayerMove() {
   if (player.state == DYING)
     return;
 
@@ -15,9 +28,9 @@ void handle_player_move() {
   if(arduboy.pressed(B_BUTTON)) {
     int fx = (player.x+8)/16;
     int fy = (player.y+8)/16;
-    if (player.cooldown == 0) {
+    if (player.cooldownCounter == 0) {
       placeBomb(fx, fy);
-      player.cooldown = 200;
+      player.cooldownCounter = player.cooldown;
     }
   }
   if(arduboy.pressed(LEFT_BUTTON)) {
@@ -39,15 +52,14 @@ void handle_player_move() {
 }
 
 void updatePlayer(Player& player) {
-  if (player.cooldown > 0) {
-    player.cooldown--;
+  if (player.cooldownCounter > 0) {
+    player.cooldownCounter--;
   }
   
   player.dx = 0;
   player.dy = 0;
   
-  handle_player_move();
-  playerCheckCollision(0, 0); // See if collided with EXPLOSION, trigger handling
+  handlePlayerMove();
 
   if (player.state == DYING) {
     player.frame++;

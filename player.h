@@ -8,11 +8,14 @@ typedef struct {
   int dx;
   int dy;
   int cooldown;
+  int cooldownCounter;
   unsigned char frame;
   enum alive_state state;
 } Player;
 
 extern Player player;
+
+void initializePlayer();
 
 void updatePlayer(Player& player);
 

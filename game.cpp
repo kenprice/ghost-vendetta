@@ -31,15 +31,7 @@ void setup_board1() {
 
 void resetGameState() {
   setup_board1();
-  player.x = 16;
-  player.y = 16;
-  player.last_x = 16;
-  player.last_y = 16;
-  player.dx = 0;
-  player.dy = 0;
-  player.frame = 0;
-  player.state = ALIVE;
-  player.cooldown = 0;
+  initializePlayer();
   initializeBombs();
 }
 
@@ -90,28 +82,6 @@ void stateGamePlaying() {
 
   draw();
   drawBombs();
-/*
-  // handle explosions
-  for (int i = 0; i < BOARD_DIM; i++) {
-    for (int j = 0; j < BOARD_DIM; j++) {
-      if (gameObjects[i][j].id == FIRE) {
-        gameObjects[i][j].lifetime++;
-        if (gameObjects[i][j].lifetime > 200) {
-          gameObjects[i][j].lifetime = 0;
-          gameObjects[i][j].id = EXPLOSION;
-          explosion(i, j);
-         }
-      }
-      if (gameObjects[i][j].id == EXPLOSION) {
-        gameObjects[i][j].lifetime++;
-        if (gameObjects[i][j].lifetime > 25) {
-          gameObjects[i][j].lifetime = 0;
-          gameObjects[i][j].id = 0;
-        }
-      }
-    }
-  }
-*/
 }
 
 void stateGameOver() {
