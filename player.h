@@ -7,6 +7,7 @@ typedef struct {
   int last_y;
   int dx;
   int dy;
+  int cooldown;
   unsigned char frame;
   enum alive_state state;
 } Player;
@@ -20,3 +21,5 @@ void movePlayer(int dx, int dy);
 bool playerCollidedWith(int bx, int by);
 
 void playerCheckCollision(int dx, int dy);
+
+void killPlayer();

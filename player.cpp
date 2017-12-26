@@ -1,6 +1,7 @@
 #include "player.h"
-#include "level.h"
 #include "globals.h"
+#include "level.h"
+#include "bomb.h"
 
 Player player;
 
@@ -14,8 +15,10 @@ void handle_player_move() {
   if(arduboy.pressed(B_BUTTON)) {
     int fx = (player.x+8)/16;
     int fy = (player.y+8)/16;
-    gameObjects[fx][fy].id = FIRE;
-    gameObjects[fx][fy].lifetime = 0;
+    if (player.cooldown == 0) {
+      placeBomb(fx, fy);
+      player.cooldown = 200;
+    }
   }
   if(arduboy.pressed(LEFT_BUTTON)) {
     player.dx = -1;
@@ -36,6 +39,10 @@ void handle_player_move() {
 }
 
 void updatePlayer(Player& player) {
+  if (player.cooldown > 0) {
+    player.cooldown--;
+  }
+  
   player.dx = 0;
   player.dy = 0;
   
@@ -45,7 +52,7 @@ void updatePlayer(Player& player) {
   if (player.state == DYING) {
     player.frame++;
     if (player.frame > 20) {
-      // reset_game_state();
+      gameState = STATE_GAME_OVER;
     }
   }
 }
@@ -94,5 +101,10 @@ void movePlayer(int dx, int dy) {
   player.x += dx;
   player.y += dy;
   playerCheckCollision(dx, dy);
+}
+
+void killPlayer() {
+  player.frame = 0;
+  player.state = DYING;
 }
 

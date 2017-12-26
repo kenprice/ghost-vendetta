@@ -2,6 +2,7 @@
 #include "bitmap.h"
 #include "level.h"
 #include "player.h"
+#include "bomb.h"
 
 void clear_board() {
   for (int i = 0; i < BOARD_DIM; i++) {
@@ -38,6 +39,8 @@ void resetGameState() {
   player.dy = 0;
   player.frame = 0;
   player.state = ALIVE;
+  player.cooldown = 0;
+  initializeBombs();
 }
 
 void draw() {
@@ -54,17 +57,11 @@ void draw() {
       int wy = j * 16 + cam_y_offset + 16 - player.y;
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
-      if (gameObjects[i][j].id == FIRE) {
-          arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-      }
       if (gameObjects[i][j].id == WALL) {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + WALL_SPRITES_OFFSET, 16, 16, WHITE);
       }
       if (gameObjects[i][j].id == BRICK) {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + BRICK_SPRITES_OFFSET, 16, 16, WHITE);
-      }
-      if (gameObjects[i][j].id == EXPLOSION) {
-        arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
       }
     }
   }
@@ -77,33 +74,6 @@ void draw() {
   */
 }
 
-void explosion(int x, int y);
-
-void destroy(int x, int y) {
-  if (gameObjects[x][y].id == BRICK) {
-    gameObjects[x][y].id = 0;
-  }
-  if (gameObjects[x][y].id == FIRE) {
-    explosion(x, y);
-  }
-  if (playerCollidedWith(x, y)) {
-    player.frame = 0;
-    player.state = DYING;
-  }
-}
-
-void explosion(int x, int y) {
-  for (int i = -1; i <= 1; i++) {
-    for (int j = -1; j <= 1; j++) {
-      if (abs(i) == abs(j) && i != 0) continue;
-      if (gameObjects[x+i][y+j].id == 0 || gameObjects[x+i][y+j].id == FIRE) {
-        gameObjects[x+i][y+j].id = EXPLOSION;
-        gameObjects[x+i][y+j].lifetime = 0;
-      }
-      destroy(x + i, y + j);
-    }
-  }
-}
 
 void stateGamePrepareLevel() {
   resetGameState();
@@ -115,10 +85,12 @@ void stateGameNextLevel() {
 }
 
 void stateGamePlaying() {
-  draw();
-
   updatePlayer(player);
+  updateBombs();
 
+  draw();
+  drawBombs();
+/*
   // handle explosions
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
@@ -139,6 +111,7 @@ void stateGamePlaying() {
       }
     }
   }
+*/
 }
 
 void stateGameOver() {
