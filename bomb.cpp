@@ -18,10 +18,12 @@ void initializeBombs() {
  * Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
  */
 bool destroyBrick(int x, int y) {
+  /*
   if (gameObjects[x][y].id == BRICK) {
     gameObjects[x][y].id = 0;
     return true;
   }
+  */
   return false;
 }
 
@@ -33,34 +35,34 @@ bool destroyPlayer(int x, int y) {
 
 void destroyBricks(Bomb bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x + i, bomb.y) || gameObjects[bomb.x + i][bomb.y].id == WALL) break;
+    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) break;
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x - i, bomb.y) || gameObjects[bomb.x - i][bomb.y].id == WALL) break;
+    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) break;
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y + 1) || gameObjects[bomb.x][bomb.y + i].id == WALL) break;
+    if (destroyBrick(bomb.x, bomb.y + 1) || getTile(bomb.x, bomb.y + i) == WALL) break;
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y - 1) || gameObjects[bomb.x][bomb.y - i].id == WALL) break;
+    if (destroyBrick(bomb.x, bomb.y - 1) || getTile(bomb.x, bomb.y - i) == WALL) break;
   }
 }
 
 void explosion(Bomb bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (gameObjects[bomb.x + i][bomb.y].id == WALL) break;
+    if (getTile(bomb.x + i, bomb.y) == WALL) break;
     destroyPlayer(bomb.x + i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (gameObjects[bomb.x - i][bomb.y].id == WALL) break;
+    if (getTile(bomb.x - 1, bomb.y) == WALL) break;
     destroyPlayer(bomb.x - i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (gameObjects[bomb.x][bomb.y + i].id == WALL) break;
+    if (getTile(bomb.x, bomb.y + i) == WALL) break;
     destroyPlayer(bomb.x, bomb.y + i);
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (gameObjects[bomb.x][bomb.y - i].id == WALL) break;
+    if (getTile(bomb.x, bomb.y - i) == WALL) break;
     destroyPlayer(bomb.x, bomb.y- i);
   }
 }
@@ -111,19 +113,19 @@ void drawBomb(Bomb bomb) {
   if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.x + i > BOARD_DIM || gameObjects[bomb.x + i][bomb.y].id >= WALL) break;
+      if (bomb.x + i > BOARD_DIM || getTile(bomb.x + i, bomb.y) >= WALL) break;
       arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.x - i < 0 || gameObjects[bomb.x - i][bomb.y].id >= WALL) break;
+      if (bomb.x - i < 0 || getTile(bomb.x - i, bomb.y) >= WALL) break;
       arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.y + i > BOARD_DIM || gameObjects[bomb.x][bomb.y + i].id >= WALL) break;
+      if (bomb.y + i > BOARD_DIM || getTile(bomb.x, bomb.y + i) >= WALL) break;
       arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.y - i < 0 || gameObjects[bomb.x][bomb.y - i].id >= WALL) break;
+      if (bomb.y - i < 0 || getTile(bomb.x, bomb.y - i) >= WALL) break;
       arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
   } else {

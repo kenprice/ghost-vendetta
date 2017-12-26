@@ -8,7 +8,18 @@
 byte level;
 byte displayLevel;
 
-GameObject gameObjects[BOARD_DIM][BOARD_DIM];
+byte getTile(unsigned int posX, unsigned int posY) {
+  return pgm_read_byte(
+    &blocks[
+      pgm_read_byte(
+        &maps[0 /* TODO variable levels */]
+        [posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM]
+      )
+    ][
+      (posX % BLOCK_DIM) + ((posY % BLOCK_DIM) * BLOCK_DIM)
+    ]
+  );
+}
 
 void drawLevel(int posX, int posY) {
   for (int i = 0; i < BOARD_DIM; i++) {
@@ -17,17 +28,8 @@ void drawLevel(int posX, int posY) {
       int wy = j * 16 + CAM_Y_OFFSET + 16 - posY;
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
-      if (gameObjects[i][j].id == FIRE) {
-          arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-      }
-      if (gameObjects[i][j].id == WALL) {
+      if (getTile(i, j) == WALL) {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + WALL_SPRITES_OFFSET, 16, 16, WHITE);
-      }
-      if (gameObjects[i][j].id == BRICK) {
-          arduboy.drawBitmap(wx - 16, wy - 16, sprites + BRICK_SPRITES_OFFSET, 16, 16, WHITE);
-      }
-      if (gameObjects[i][j].id == EXPLOSION) {
-          arduboy.drawBitmap(wx - 16, wy - 16, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
       }
     }
   }

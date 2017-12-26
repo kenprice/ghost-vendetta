@@ -89,12 +89,12 @@ void playerCheckCollision(int dx, int dy) {
       bool is_collided = playerCollidedWith(i, j);
 
       if (is_collided) {
-        if (dx != 0 && j > 1             && dy != -1 && gameObjects[i][j-1].id < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y -= 1;
-        if (dx != 0 && j < BOARD_DIM - 1 && dy != 1  && gameObjects[i][j+1].id < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) player.y += 1;
-        if (dy != 0 && i > 1             && dx != -1 && gameObjects[i-1][j].id < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
-        if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && gameObjects[i+1][j].id < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
+        if (dx != 0 && j > 1             && dy != -1 && getTile(i, j-1) < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y -= 1;
+        if (dx != 0 && j < BOARD_DIM - 1 && dy != 1  && getTile(i, j+1) < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) player.y += 1;
+        if (dy != 0 && i > 1             && dx != -1 && getTile(i-1, j) < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
+        if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && getTile(i+1, j) < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
-        if (gameObjects[i][j].id >= WALL) {
+        if (getTile(i, j) >= WALL) {
           player.x -= dx;
           player.y -= dy;
           return;

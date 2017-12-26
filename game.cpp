@@ -3,34 +3,11 @@
 #include "level.h"
 #include "player.h"
 #include "bomb.h"
+#include <Arduboy2.h>
 
-void clear_board() {
-  for (int i = 0; i < BOARD_DIM; i++) {
-    for (int j = 0; j < BOARD_DIM; j++) {
-      gameObjects[i][j].id = 0;
-      gameObjects[i][j].lifetime = 0;
-    }
-  }
-}
-
-void setup_board1() {
-  clear_board();
-  for (int i = 0; i < BOARD_DIM; i++) {
-    for (int j = 0; j < BOARD_DIM; j++) {
-      bool is_wall = i == 0 || i == BOARD_DIM - 1 || j == 0 || j == BOARD_DIM - 1 || ((i + 1) % 2 && (j + 1) % 2);
-      if (is_wall)
-        gameObjects[i][j].id = WALL;
-
-      bool is_brick = !is_wall && (i > 2 || j > 2);
-      if (is_brick) {
-        gameObjects[i][j].id = random(0, 4) < 3 ? BRICK : 0;
-      }
-    }
-  }
-}
+Arduboy2 arduboy2;
 
 void resetGameState() {
-  setup_board1();
   initializePlayer();
   initializeBombs();
 }
@@ -40,32 +17,26 @@ void draw() {
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
+
+  arduboy2.setCursor(0, 0);
+  arduboy2.print(player.x / 16);
+  arduboy2.setCursor(64, 0);
+  arduboy2.print(player.y / 16);
   
   arduboy.drawBitmap(cam_x_offset, cam_y_offset, sprites + GHOST_SPRITES_OFFSET + (player_sprite * SPRITE_COL_OFFSET), 16, 16, WHITE);
 
-  for (int i = 0; i < BOARD_DIM; i++) {
-    for (int j = 0; j < BOARD_DIM; j++) {
+  for (int i = 0; i < MAP_DIM * BLOCK_DIM; i++) {
+    for (int j = 0; j < MAP_DIM * BLOCK_DIM; j++) {
       int wx = i * 16 + cam_x_offset + 16 - player.x;
       int wy = j * 16 + cam_y_offset + 16 - player.y;
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
-      if (gameObjects[i][j].id == WALL) {
+      if (getTile(i, j) == WALL) {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + WALL_SPRITES_OFFSET, 16, 16, WHITE);
-      }
-      if (gameObjects[i][j].id == BRICK) {
-          arduboy.drawBitmap(wx - 16, wy - 16, sprites + BRICK_SPRITES_OFFSET, 16, 16, WHITE);
       }
     }
   }
-  /*
-  arduboy.setCursor(0, 0);
-  arduboy.print(player.x);
-  
-  arduboy.setCursor(32, 0);
-  arduboy.print(player.y);
-  */
 }
-
 
 void stateGamePrepareLevel() {
   resetGameState();
