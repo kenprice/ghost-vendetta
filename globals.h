@@ -22,6 +22,11 @@
 #define STATE_GAME_PAUSE         10
 #define STATE_GAME_END           11
 
+//camera offsets
+
+#define CAM_X_OFFSET 56 // 128 / 2 - 8
+#define CAM_Y_OFFSET 24 // 64 / 2 - 8
+
 // main objects //////////////////////////////////////////////////////////////
 
 extern Arduboy2Base arduboy;

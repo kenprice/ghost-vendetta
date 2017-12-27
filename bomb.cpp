@@ -3,6 +3,7 @@
 #include "bomb.h"
 #include "player.h"
 #include "level.h"
+#include "brick.h"
 
 Bomb bombs[MAX_BOMBS];
 
@@ -18,12 +19,10 @@ void initializeBombs() {
  * Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
  */
 bool destroyBrick(int x, int y) {
-  /*
-  if (gameObjects[x][y].id == BRICK) {
-    gameObjects[x][y].id = 0;
+  if (isBrick(x, y)) {
+    setBrick(x, y, false);
     return true;
   }
-  */
   return false;
 }
 

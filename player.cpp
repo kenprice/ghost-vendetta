@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "level.h"
 #include "bomb.h"
+#include "brick.h"
 
 Player player;
 
@@ -94,7 +95,7 @@ void playerCheckCollision(int dx, int dy) {
         if (dy != 0 && i > 1             && dx != -1 && getTile(i-1, j) < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
         if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && getTile(i+1, j) < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
 
-        if (getTile(i, j) >= WALL) {
+        if (getTile(i, j) >= WALL || isBrick(i, j)) {
           player.x -= dx;
           player.y -= dy;
           return;
