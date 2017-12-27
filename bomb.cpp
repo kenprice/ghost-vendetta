@@ -11,7 +11,7 @@ void initializeBombs() {
   for (int i = 0; i < MAX_BOMBS; i++) {
     bombs[i].active = false;
     bombs[i].exploding = false;
-    bombs[i].blastRadius = 1;
+    bombs[i].blastRadius = 2;
   }
 }
 
@@ -32,36 +32,44 @@ bool destroyPlayer(int x, int y) {
   }  
 }
 
-void destroyBricks(Bomb bomb) {
+void destroyBricks(Bomb& bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) break;
+    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
+      bomb.blastEast = i;
+      break;
+    }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) break;
+    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
+      bomb.blastWest = i;
+      break;
+    }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y + 1) || getTile(bomb.x, bomb.y + i) == WALL) break;
+    if (destroyBrick(bomb.x, bomb.y + 1) || getTile(bomb.x, bomb.y + i) == WALL) {
+      bomb.blastSouth = i;
+      break;
+    }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y - 1) || getTile(bomb.x, bomb.y - i) == WALL) break;
+    if (destroyBrick(bomb.x, bomb.y - 1) || getTile(bomb.x, bomb.y - i) == WALL) {
+      bomb.blastNorth = i;
+      break;
+    }
   }
 }
 
 void explosion(Bomb bomb) {
-  for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x + i, bomb.y) == WALL) break;
+  for (int i = 1; i <= bomb.blastEast; i++) {
     destroyPlayer(bomb.x + i, bomb.y);
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x - 1, bomb.y) == WALL) break;
+  for (int i = 1; i <= bomb.blastWest; i++) {
     destroyPlayer(bomb.x - i, bomb.y);
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x, bomb.y + i) == WALL) break;
+  for (int i = 1; i <= bomb.blastSouth; i++) {
     destroyPlayer(bomb.x, bomb.y + i);
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x, bomb.y - i) == WALL) break;
+  for (int i = 1; i <= bomb.blastNorth; i++) {
     destroyPlayer(bomb.x, bomb.y- i);
   }
 }
@@ -78,6 +86,10 @@ void placeBomb(int x, int y) {
   bombs[i].y = y;
   bombs[i].active = true;
   bombs[i].lifetime = 0;
+  bombs[i].blastNorth = bombs[i].blastRadius;
+  bombs[i].blastSouth = bombs[i].blastRadius;
+  bombs[i].blastEast = bombs[i].blastRadius;
+  bombs[i].blastWest = bombs[i].blastRadius;
 }
     
 void updateBomb(Bomb& bomb) {  
@@ -111,20 +123,16 @@ void drawBomb(Bomb bomb) {
 
   if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.x + i > BOARD_DIM || getTile(bomb.x + i, bomb.y) >= WALL) break;
+    for (int i = 1; i <= bomb.blastEast; i++) {
       arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
-    for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.x - i < 0 || getTile(bomb.x - i, bomb.y) >= WALL) break;
+    for (int i = 1; i <= bomb.blastWest; i++) {
       arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
-    for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.y + i > BOARD_DIM || getTile(bomb.x, bomb.y + i) >= WALL) break;
+    for (int i = 1; i <= bomb.blastSouth; i++) {
       arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
-    for (int i = 1; i <= bomb.blastRadius; i++) {
-      if (bomb.y - i < 0 || getTile(bomb.x, bomb.y - i) >= WALL) break;
+    for (int i = 1; i <= bomb.blastNorth; i++) {
       arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
   } else {

@@ -22,7 +22,7 @@ const FunctionPointer PROGMEM mainGameLoop[] =
 void setup() {
   arduboy.begin();
   arduboy.clear();
-  arduboy.setFrameRate(40);
+  arduboy.setFrameRate(60);
 }
 
 void loop() {

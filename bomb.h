@@ -2,7 +2,7 @@
 #define _BOMB_H
 
 #include <Arduino.h>
-#define MAX_BOMBS 20
+#define MAX_BOMBS 10
 
 typedef struct {
   int lifetime;
@@ -12,6 +12,10 @@ typedef struct {
   byte blastRadius = 1;
   bool active;
   bool exploding;
+  byte blastNorth;
+  byte blastSouth;
+  byte blastEast;
+  byte blastWest;
 } Bomb;
 
 extern Bomb bombs[MAX_BOMBS];

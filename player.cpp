@@ -17,6 +17,7 @@ void initializePlayer() {
   player.state = ALIVE;
   player.cooldown = 100;
   player.cooldownCounter = 0;
+  player.speed = 1;
 }
 
 void handlePlayerMove() {
@@ -25,6 +26,8 @@ void handlePlayerMove() {
 
   bool dpad_pressed = arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(DOWN_BUTTON);
   if (dpad_pressed) player.frame = player.frame + 1 % 60;
+
+  player.speed = arduboy.pressed(A_BUTTON) ? 2 : 1;
 
   if(arduboy.pressed(B_BUTTON)) {
     int fx = (player.x+8)/16;
@@ -35,16 +38,16 @@ void handlePlayerMove() {
     }
   }
   if(arduboy.pressed(LEFT_BUTTON)) {
-    player.dx = -1;
+    player.dx = -player.speed;
   }
   if(arduboy.pressed(RIGHT_BUTTON)) {
-    player.dx = 1;
+    player.dx = player.speed;
   }
   if(arduboy.pressed(UP_BUTTON)) {
-    player.dy = -1;
+    player.dy = -player.speed;
   }
   if(arduboy.pressed(DOWN_BUTTON)) {
-    player.dy = 1;
+    player.dy = player.speed;
   }
   if (player.dx)
     movePlayer(player.dx, 0);
@@ -90,14 +93,16 @@ void playerCheckCollision(int dx, int dy) {
       bool is_collided = playerCollidedWith(i, j);
 
       if (is_collided) {
-        if (dx != 0 && j > 1             && dy != -1 && getTile(i, j-1) < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y -= 1;
-        if (dx != 0 && j < BOARD_DIM - 1 && dy != 1  && getTile(i, j+1) < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) player.y += 1;
-        if (dy != 0 && i > 1             && dx != -1 && getTile(i-1, j) < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x -= 1;
-        if (dy != 0 && i < BOARD_DIM - 1 && dx != 1  && getTile(i+1, j) < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += 1;
+        if (dx != 0 && j > 1             && dy > -1 && getTile(i, j-1) < WALL && (j - 1) * 16 + 5 > y && y > (j - 1) * 16)     player.y += dy;
+        if (dx != 0 && j < BOARD_DIM - 1 && dy < 1  && getTile(i, j+1) < WALL && (j + 1) * 16 > y     && y > (j + 1) * 16 - 5) player.y += dy;
+        if (dy != 0 && i > 1             && dx > -1 && getTile(i-1, j) < WALL && (i - 1) * 16 + 5 > x && x > (i - 1) * 16)     player.x += dx;
+        if (dy != 0 && i < BOARD_DIM - 1 && dx < 1  && getTile(i+1, j) < WALL && (i + 1) * 16 > x     && x > (i + 1) * 16 - 5) player.x += dx;
 
+        while (playerCollidedWith(i, j) && (getTile(i, j) >= WALL || isBrick(i, j))) {
+          player.x -= (dx < 0) ? -1 : (dx > 0);
+          player.y -= (dy < 0) ? -1 : (dy > 0);
+        }
         if (getTile(i, j) >= WALL || isBrick(i, j)) {
-          player.x -= dx;
-          player.y -= dy;
           return;
         }
       }
@@ -106,6 +111,7 @@ void playerCheckCollision(int dx, int dy) {
 }
 
 void movePlayer(int dx, int dy) {
+  if (!arduboy.everyXFrames(2)) return;
   player.x += dx;
   player.y += dy;
   playerCheckCollision(dx, dy);
