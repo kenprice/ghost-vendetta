@@ -5,13 +5,8 @@
 #define TILE_BLANK = 0
 #define TILE_WALL = 1
 
-#define NULL 0
-#define FIRE 1
-#define EXPLOSION 2
-
 #define BRICK_SPAWN 0x09        // Tile that spawns bricks at beginning of level
 #define WALL        0x0A
-#define BRICK       0x0B
 
 #define BLOCK_DIM 4             // Block dimensions = n where blocks have n*n tiles
 #define MAP_DIM 8               // Map dimensions = n where maps have n*n blocks
