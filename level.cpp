@@ -5,16 +5,12 @@
 #define CAM_X_OFFSET 56 // 128 / 2 - 8
 #define CAM_Y_OFFSET 24 // 64 / 2 - 8
 
-byte level;
-byte displayLevel;
+byte level = 1;
 
 byte getTile(unsigned int posX, unsigned int posY) {
   return pgm_read_byte(
     &blocks[
-      pgm_read_byte(
-        &maps[0 /* TODO variable levels */]
-        [posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM]
-      )
+      pgm_read_byte(&maps[level-1][posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM])
     ][
       (posX % BLOCK_DIM) + ((posY % BLOCK_DIM) * BLOCK_DIM)
     ]
