@@ -1,5 +1,6 @@
 const unsigned char SPRITE_COL_OFFSET = 224;
 const unsigned char PROGMEM GHOST_SPRITES_OFFSET = 32;
+const unsigned char PROGMEM SNAKE_SPRITES_OFFSET = 64;
 const unsigned char PROGMEM FIRE_SPRITES_OFFSET = 96;
 const unsigned char PROGMEM WALL_SPRITES_OFFSET = 192;
 const unsigned char PROGMEM BRICK_SPRITES_OFFSET = 128;

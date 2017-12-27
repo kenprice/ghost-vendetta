@@ -4,6 +4,7 @@
 #include "player.h"
 #include "bomb.h"
 #include "brick.h"
+#include "enemy.h"
 #include <Arduboy2.h>
 
 Arduboy2 arduboy2;
@@ -34,6 +35,8 @@ void stateGamePrepareLevel() {
   resetGameState();
   generateBricks();
   gameState = STATE_GAME_PLAYING;
+
+  addEnemy(3, 2); // TODO: This is just a test. Delete this later.
 }
 
 void stateGameNextLevel() {
@@ -46,6 +49,7 @@ void stateGamePlaying() {
 
   draw();
   drawBombs();
+  drawEnemies();
 }
 
 void stateGameOver() {
