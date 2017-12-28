@@ -1,7 +1,11 @@
+#ifndef _PLAYER
+#define _PLAYER
+
 enum alive_state { ALIVE, DYING };
 
 // constants /////////////////////////////////////////////////////////////////
 #define PLAYER_MAX_SPEED   10   // Number of frames it takes for player to move
+#define COLLISION_PADDING  5
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
@@ -26,6 +30,6 @@ void initializePlayer();
 void updatePlayer(Player& player);
 void movePlayer(int dx, int dy);
 bool playerCollidedWith(int bx, int by);
-void playerCheckCollision(int dx, int dy);
 void killPlayer();
 
+#endif
