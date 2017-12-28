@@ -4,6 +4,7 @@
 #include "player.h"
 #include "level.h"
 #include "brick.h"
+#include "enemy.h"
 
 Bomb bombs[MAX_BOMBS];
 
@@ -34,25 +35,41 @@ bool destroyPlayer(int x, int y) {
 
 void destroyBricks(Bomb& bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
+    if (getTile(bomb.x + i, bomb.y) == WALL) {
+      bomb.blastEast = i - 1;
+      break;
+    }
+    if (destroyBrick(bomb.x + i, bomb.y)) {
       bomb.blastEast = i;
       break;
     }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
+    if (getTile(bomb.x - i, bomb.y) == WALL) {
+      bomb.blastWest = i - 1;
+      break;
+    }
+    if (destroyBrick(bomb.x - i, bomb.y)) {
       bomb.blastWest = i;
       break;
     }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y + 1) || getTile(bomb.x, bomb.y + i) == WALL) {
+    if (getTile(bomb.x, bomb.y + i) == WALL) {
+      bomb.blastSouth = i - 1;
+      break;
+    }
+    if (destroyBrick(bomb.x, bomb.y + 1)) {
       bomb.blastSouth = i;
       break;
     }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (destroyBrick(bomb.x, bomb.y - 1) || getTile(bomb.x, bomb.y - i) == WALL) {
+    if (getTile(bomb.x, bomb.y - i) == WALL) {
+      bomb.blastNorth = i - 1;
+      break;
+    }
+    if (destroyBrick(bomb.x, bomb.y - 1)) {
       bomb.blastNorth = i;
       break;
     }
@@ -62,15 +79,19 @@ void destroyBricks(Bomb& bomb) {
 void explosion(Bomb bomb) {
   for (int i = 1; i <= bomb.blastEast; i++) {
     destroyPlayer(bomb.x + i, bomb.y);
+    killEnemiesAt(bomb.x + i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastWest; i++) {
     destroyPlayer(bomb.x - i, bomb.y);
+    killEnemiesAt(bomb.x - i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastSouth; i++) {
     destroyPlayer(bomb.x, bomb.y + i);
+    killEnemiesAt(bomb.x, bomb.y + i);
   }
   for (int i = 1; i <= bomb.blastNorth; i++) {
-    destroyPlayer(bomb.x, bomb.y- i);
+    destroyPlayer(bomb.x, bomb.y - i);
+    killEnemiesAt(bomb.x, bomb.y - i);
   }
 }
 

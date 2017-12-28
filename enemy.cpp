@@ -40,6 +40,18 @@ bool addEnemy(byte x, byte y) {
   return false;
 }
 
+/**
+ * Kill all enemies at the tile coordinates
+ */
+void killEnemiesAt(byte x, byte y) {
+  for (int i = 0; i < ENEMIES_MAX; i++) {
+    if (!enemies[i].active) continue;
+    if (enemyCollidedWith(enemies[i], x * 16, y * 16)) {
+      enemies[i].active = false;
+    }
+  }
+}
+
 bool spawnEnemy() {
   byte x;
   byte y;
