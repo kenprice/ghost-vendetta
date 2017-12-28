@@ -5,9 +5,6 @@
 #include "bomb.h"
 #include "brick.h"
 #include "enemy.h"
-#include <Arduboy2.h>
-
-Arduboy2 arduboy2;
 
 void resetGameState() {
   initializePlayer();
@@ -19,11 +16,6 @@ void draw() {
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
-
-  arduboy2.setCursor(0, 0);
-  arduboy2.print(player.x / 16);
-  arduboy2.setCursor(64, 0);
-  arduboy2.print(player.y / 16);
   
   arduboy.drawBitmap(cam_x_offset, cam_y_offset, sprites + GHOST_SPRITES_OFFSET + (player_sprite * SPRITE_COL_OFFSET), 16, 16, WHITE);
 
@@ -36,7 +28,8 @@ void stateGamePrepareLevel() {
   generateBricks();
   gameState = STATE_GAME_PLAYING;
 
-  addEnemy(3, 2); // TODO: This is just a test. Delete this later.
+  for (int i = 0; i < ENEMIES_MAX; i++)
+    spawnEnemy(); // TODO: This is just a test. Delete this later.
 }
 
 void stateGameNextLevel() {
@@ -46,6 +39,7 @@ void stateGameNextLevel() {
 void stateGamePlaying() {
   updatePlayer(player);
   updateBombs();
+  updateEnemies();
 
   draw();
   drawBombs();
