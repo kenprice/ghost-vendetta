@@ -28,6 +28,7 @@ void stateGamePrepareLevel() {
   generateBricks();
   gameState = STATE_GAME_PLAYING;
 
+  clearEnemies();
   for (int i = 0; i < level + 1; i++) {
     spawnEnemy();
   }

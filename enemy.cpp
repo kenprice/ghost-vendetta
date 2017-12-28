@@ -5,9 +5,6 @@
 #include "bitmap.h"
 #include "globals.h"
 
-#include <Arduboy2.h>
-Arduboy2 arduboy2;
-
 Enemy enemies[ENEMIES_MAX];
 
 typedef void (*FunctionPointer) (Enemy& enemy);
@@ -15,6 +12,13 @@ const FunctionPointer PROGMEM enemyUpdates[] =
 {
   updateSnake
 };
+
+void clearEnemies() {
+  for (int i = 0; i < ENEMIES_MAX; i++) {
+    enemies[i].active = false;
+    enemies[i].id = ENEMY_SNAKE;
+  }
+}
 
 void setEnemy(Enemy& enemy, byte x, byte y) {
   enemy.x = x;
@@ -46,7 +50,7 @@ bool spawnEnemy() {
     x = random(0, BOARD_DIM);
     y = random(0, BOARD_DIM);
     tile = getTile(x, y);
-    nearPlayer = !((x < player.x / 16) || (x > player.x / 16) || (y < player.y / 16) || (y > player.y / 16));
+    nearPlayer = x <= player.x / 16 + 1 && x >= player.x / 16 - 1 && y <= player.y / 16 + 1 && y >= player.y / 16 - 1;
   } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || nearPlayer);
 
   return addEnemy(x, y);
@@ -61,16 +65,6 @@ void drawEnemies() {
     int wx = enemies[i].x + cam_x_offset - player.x;
     int wy = enemies[i].y + cam_y_offset - player.y;
     arduboy.drawBitmap(wx, wy, sprites + SNAKE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE); 
-
-    arduboy2.setCursor(96, 0);
-    arduboy2.print(enemies[i].direction);
-    arduboy2.setCursor(112, 0);
-    arduboy2.print(enemies[i].state);
-    
-    arduboy2.setCursor(0, 0);
-    arduboy2.print(enemies[i].x);
-    arduboy2.setCursor(18, 0);
-    arduboy2.print(enemies[i].y);
   }
 }
 

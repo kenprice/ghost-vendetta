@@ -27,6 +27,7 @@ typedef struct {
 extern Enemy enemies[ENEMIES_MAX];
 
 // functions /////////////////////////////////////////////////////////////////
+void clearEnemies();
 bool addEnemy(byte x, byte y);
 bool spawnEnemy();
 void drawEnemies();
