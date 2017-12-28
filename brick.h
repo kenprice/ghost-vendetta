@@ -1,6 +1,5 @@
 #ifndef _BRICK
 #define _BRICK
-#include <Arduboy2.h>
 #include "level.h"
 
 extern byte bricks[NUM_LEVEL_TILES/8];

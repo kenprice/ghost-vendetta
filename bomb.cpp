@@ -59,7 +59,7 @@ void destroyBricks(Bomb& bomb) {
       bomb.blastSouth = i - 1;
       break;
     }
-    if (destroyBrick(bomb.x, bomb.y + 1)) {
+    if (destroyBrick(bomb.x, bomb.y + i)) {
       bomb.blastSouth = i;
       break;
     }
@@ -69,7 +69,7 @@ void destroyBricks(Bomb& bomb) {
       bomb.blastNorth = i - 1;
       break;
     }
-    if (destroyBrick(bomb.x, bomb.y - 1)) {
+    if (destroyBrick(bomb.x, bomb.y - i)) {
       bomb.blastNorth = i;
       break;
     }
