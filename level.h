@@ -15,7 +15,7 @@
 
 // globals ///////////////////////////////////////////////////////////////////
 extern byte level;
-extern PROGMEM const byte blocks[10][16];
+extern PROGMEM const byte blocks[][16];
 extern PROGMEM const byte maps[][MAP_DIM*MAP_DIM];
 
 // functions /////////////////////////////////////////////////////////////////
