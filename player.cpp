@@ -67,7 +67,7 @@ void updatePlayer(Player& player) {
 
   if (player.state == DYING) {
     player.frame++;
-    if (player.frame > 20) {
+    if (player.frame > 10) {
       gameState = STATE_GAME_OVER;
     }
   }

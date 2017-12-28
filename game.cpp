@@ -28,8 +28,9 @@ void stateGamePrepareLevel() {
   generateBricks();
   gameState = STATE_GAME_PLAYING;
 
-  for (int i = 0; i < ENEMIES_MAX; i++)
-    spawnEnemy(); // TODO: This is just a test. Delete this later.
+  for (int i = 0; i < level + 1; i++) {
+    spawnEnemy();
+  }
 }
 
 void stateGameNextLevel() {

@@ -40,19 +40,16 @@ bool spawnEnemy() {
   byte x;
   byte y;
   byte tile;
+  bool nearPlayer;
 
   do {
     x = random(0, BOARD_DIM);
     y = random(0, BOARD_DIM);
     tile = getTile(x, y);
-  } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y));
+    nearPlayer = !((x < player.x / 16) || (x > player.x / 16) || (y < player.y / 16) || (y > player.y / 16));
+  } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || nearPlayer);
 
-  if ((x < player.x / 16) || (x > player.x / 16) || (y < player.y / 16) || (y > player.y / 16))
-  {
-    return addEnemy(x, y);
-  }
-
-  return false;
+  return addEnemy(x, y);
 }
 
 void drawEnemies() {
@@ -78,7 +75,7 @@ void drawEnemies() {
 }
 
 bool enemyCollidedWith(Enemy enemy, int bx, int by) {
-  return enemy.x < bx * 16 + 13 && enemy.x + 13 > bx * 16 && enemy.y < by * 16 + 13 && enemy.y + 16 > by * 13;
+  return enemy.x < bx + 13 && enemy.x + 13 > bx && enemy.y < by + 13 && enemy.y + 13 > by;
 }
 
 /**
@@ -94,8 +91,11 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
 
   for (int i = start_x; i <= end_x; i++) {
     for (int j = start_y; j <= end_y; j++) {
-      if (enemyCollidedWith(enemy, i, j) && (getTile(i, j) == WALL || isBrick(i, j))) {
+      if (enemyCollidedWith(enemy, i * 16, j * 16) && (getTile(i, j) == WALL || isBrick(i, j))) {
         return true;
+      }
+      if (enemyCollidedWith(enemy, player.x, player.y)) {
+        killPlayer();
       }
     }
   }
@@ -135,8 +135,7 @@ void updateEnemies() {
   if (!arduboy.everyXFrames(10)) return;
   for (int i = 0; i < ENEMIES_MAX; i++) {
     if (!enemies[i].active) continue;
-    updateSnake(enemies[i]);
-    //((FunctionPointer) pgm_read_word (&enemyUpdates[enemies[i].id]))(enemies[i]);
+    ((FunctionPointer) pgm_read_word (&enemyUpdates[enemies[i].id]))(enemies[i]);
   }
 }
 
