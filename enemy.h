@@ -9,7 +9,7 @@
 #define ENEMY_STATE_STOPPED   0
 #define ENEMY_STATE_MOVING    1
 
-#define ENEMIES_MAX           5
+#define MAX_ENEMIES           5
 
 #define ENEMY_SNAKE           0x00
 
@@ -24,7 +24,7 @@ typedef struct {
 } Enemy;
 
 // globals ///////////////////////////////////////////////////////////////////
-extern Enemy enemies[ENEMIES_MAX];
+extern Enemy enemies[MAX_ENEMIES];
 
 // functions /////////////////////////////////////////////////////////////////
 void clearEnemies();

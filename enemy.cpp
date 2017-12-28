@@ -5,7 +5,7 @@
 #include "bitmap.h"
 #include "globals.h"
 
-Enemy enemies[ENEMIES_MAX];
+Enemy enemies[MAX_ENEMIES];
 
 typedef void (*FunctionPointer) (Enemy& enemy);
 const FunctionPointer PROGMEM enemyUpdates[] =
@@ -14,7 +14,7 @@ const FunctionPointer PROGMEM enemyUpdates[] =
 };
 
 void clearEnemies() {
-  for (int i = 0; i < ENEMIES_MAX; i++) {
+  for (int i = 0; i < MAX_ENEMIES; i++) {
     enemies[i].active = false;
     enemies[i].id = ENEMY_SNAKE;
   }
@@ -31,7 +31,7 @@ void setEnemy(Enemy& enemy, byte x, byte y) {
  * Add new enemy at tile coordinates
  */
 bool addEnemy(byte x, byte y) { 
-  for (int i = 0; i < ENEMIES_MAX; i++) {
+  for (int i = 0; i < MAX_ENEMIES; i++) {
     if (enemies[i].active) continue;
     setEnemy(enemies[i], x * 16, y * 16);
     return true;
@@ -44,7 +44,7 @@ bool addEnemy(byte x, byte y) {
  * Kill all enemies at the tile coordinates
  */
 void killEnemiesAt(byte x, byte y) {
-  for (int i = 0; i < ENEMIES_MAX; i++) {
+  for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
     if (enemyCollidedWith(enemies[i], x * 16, y * 16)) {
       enemies[i].active = false;
@@ -72,7 +72,7 @@ void drawEnemies() {
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
 
-  for (int i = 0; i < ENEMIES_MAX; i++) {
+  for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
     int wx = enemies[i].x + cam_x_offset - player.x;
     int wy = enemies[i].y + cam_y_offset - player.y;
@@ -139,7 +139,7 @@ void updateSnake(Enemy& enemy) {
 
 void updateEnemies() {
   if (!arduboy.everyXFrames(10)) return;
-  for (int i = 0; i < ENEMIES_MAX; i++) {
+  for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
     ((FunctionPointer) pgm_read_word (&enemyUpdates[enemies[i].id]))(enemies[i]);
   }
