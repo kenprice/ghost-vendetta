@@ -9,8 +9,8 @@
 #define WALL          0x0A
 
 #define BLOCK_DIM         4       // Block dimensions = n where blocks have n*n tiles
-#define MAP_DIM           8       // Map dimensions = n where maps have n*n blocks
-#define NUM_LEVEL_TILES   1024    // Number of possible tiles per level
+#define MAP_DIM           4       // Map dimensions = n where maps have n*n blocks
+#define NUM_LEVEL_TILES   256     // Number of possible tiles per level
 #define BOARD_DIM         (BLOCK_DIM * MAP_DIM)
 
 // globals ///////////////////////////////////////////////////////////////////
