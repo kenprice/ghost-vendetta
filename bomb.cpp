@@ -77,6 +77,8 @@ void destroyBricks(Bomb& bomb) {
 }
 
 void explosion(Bomb bomb) {
+  destroyPlayer(bomb.x, bomb.y);
+  killEnemiesAt(bomb.x, bomb.y);
   for (int i = 1; i <= bomb.blastEast; i++) {
     destroyPlayer(bomb.x + i, bomb.y);
     killEnemiesAt(bomb.x + i, bomb.y);
