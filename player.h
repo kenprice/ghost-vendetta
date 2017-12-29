@@ -1,8 +1,6 @@
 #ifndef _PLAYER
 #define _PLAYER
 
-enum alive_state { ALIVE, DYING };
-
 // constants /////////////////////////////////////////////////////////////////
 #define PLAYER_MAX_SPEED   10   // Number of frames it takes for player to move
 #define COLLISION_PADDING  5
@@ -13,6 +11,8 @@ enum alive_state { ALIVE, DYING };
 #define PLAYER_DIRECTION_RIGHT  3
 
 // structures ////////////////////////////////////////////////////////////////
+enum alive_state { ALIVE, DYING };
+
 typedef struct {
   int x;
   int y;

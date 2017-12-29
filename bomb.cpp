@@ -17,8 +17,8 @@ void initializeBombs() {
 }
 
 /**
- * Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
- */
+   Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
+*/
 bool destroyBrick(int x, int y) {
   if (isBrick(x, y)) {
     setBrick(x, y, false);
@@ -30,7 +30,7 @@ bool destroyBrick(int x, int y) {
 bool destroyPlayer(int x, int y) {
   if (playerCollidedWith(x, y)) {
     killPlayer();
-  }  
+  }
 }
 
 void destroyBricks(Bomb& bomb) {
@@ -98,8 +98,8 @@ void explosion(Bomb bomb) {
 }
 
 /**
- * Place bomb on grid at grid coordinates.
- */
+   Place bomb on grid at grid coordinates.
+*/
 void placeBomb(int x, int y) {
   int i = 0;
   while (bombs[i].active && i < MAX_BOMBS) {
@@ -108,24 +108,24 @@ void placeBomb(int x, int y) {
   bombs[i].x = x;
   bombs[i].y = y;
   bombs[i].active = true;
-  bombs[i].lifetime = 0;
+  bombs[i].lifetime = 200;
   bombs[i].blastNorth = bombs[i].blastRadius;
   bombs[i].blastSouth = bombs[i].blastRadius;
   bombs[i].blastEast = bombs[i].blastRadius;
   bombs[i].blastWest = bombs[i].blastRadius;
 }
-    
-void updateBomb(Bomb& bomb) {  
-  bomb.lifetime++;
-  if (!bomb.exploding && bomb.lifetime > 200) {
-    bomb.lifetime = 0;
+
+void updateBomb(Bomb& bomb) {
+  bomb.lifetime--;
+  if (!bomb.exploding && bomb.lifetime <= 0) {
+    bomb.lifetime = 25;
     bomb.exploding = true;
     destroyBricks(bomb);
   }
   if (bomb.exploding) {
     explosion(bomb);
   }
-  if (bomb.exploding && bomb.lifetime > 25) {
+  if (bomb.exploding && bomb.lifetime <= 0) {
     bomb.active = false;
     bomb.exploding = false;
   }
@@ -139,8 +139,8 @@ void updateBombs() {
 }
 
 void drawBomb(Bomb bomb) {
-  int cam_x_offset = 128/2-8;
-  int cam_y_offset = 64/2-8;
+  int cam_x_offset = 128 / 2 - 8;
+  int cam_y_offset = 64 / 2 - 8;
   int wx = bomb.x * 16 + cam_x_offset - player.x;
   int wy = bomb.y * 16 + cam_y_offset - player.y;
 
@@ -159,7 +159,16 @@ void drawBomb(Bomb bomb) {
       arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
   } else {
-    arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE); 
+    arduboy.drawBitmap(wx + 4, wy + 6, sprites + SPRITE_COL_OFFSET + 96, 8, 8, WHITE);
+
+    for (int i = 0; i < 3; i++) {
+      arduboy.drawPixel(wx + 3 + random(7), wy - 1 + random(7));
+    }
+    if (bomb.lifetime > 160) arduboy.drawPixel(wx + 7, wy + 1);
+    if (bomb.lifetime > 120) arduboy.drawPixel(wx + 8, wy + 2);
+    if (bomb.lifetime > 80)  arduboy.drawPixel(wx + 7, wy + 3);
+    if (bomb.lifetime > 40)  arduboy.drawPixel(wx + 8, wy + 4);
+    if (bomb.lifetime > 0)   arduboy.drawPixel(wx + 7, wy + 5);
   }
 }
 

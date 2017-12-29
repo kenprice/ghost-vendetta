@@ -2,11 +2,14 @@
 #define _BOMB_H
 
 #include <Arduino.h>
-#define MAX_BOMBS 10
 
+// constants /////////////////////////////////////////////////////////////////
+#define MAX_BOMBS       10
+#define BOMB_SPRITE_DIM 8
+
+// structures ////////////////////////////////////////////////////////////////
 typedef struct {
   int lifetime;
-  int frame;
   byte x;
   byte y;
   byte blastRadius = 1;
@@ -18,16 +21,15 @@ typedef struct {
   byte blastWest;
 } Bomb;
 
+// globals ///////////////////////////////////////////////////////////////////
 extern Bomb bombs[MAX_BOMBS];
-
 extern int numBombs;
 extern int startBombs;
 
+// functions /////////////////////////////////////////////////////////////////
 void initializeBombs();
-
 void placeBomb(int x, int y);
-
 void updateBombs();
-
 void drawBombs();
+
 #endif
