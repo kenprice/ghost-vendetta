@@ -4,6 +4,7 @@
 #include "brick.h"
 #include "bitmap.h"
 #include "globals.h"
+#include "collision.h"
 
 Enemy enemies[MAX_ENEMIES];
 
@@ -46,7 +47,7 @@ bool addEnemy(byte x, byte y) {
 void killEnemiesAt(byte x, byte y) {
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
-    if (enemyCollidedWith(enemies[i], x * 16, y * 16)) {
+    if (collidedWith(enemies[i].x, enemies[i].y, x * 16, y * 16, 3)) {
       enemies[i].active = false;
     }
   }
@@ -80,10 +81,6 @@ void drawEnemies() {
   }
 }
 
-bool enemyCollidedWith(Enemy enemy, int bx, int by) {
-  return enemy.x < bx + 13 && enemy.x + 13 > bx && enemy.y < by + 13 && enemy.y + 13 > by;
-}
-
 /**
  * Checks if enemy collided with a solid object
  */
@@ -97,10 +94,10 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
 
   for (int i = start_x; i <= end_x; i++) {
     for (int j = start_y; j <= end_y; j++) {
-      if (enemyCollidedWith(enemy, i * 16, j * 16) && (getTile(i, j) == WALL || isBrick(i, j))) {
+      if (collidedWith(enemy.x, enemy.y, i * 16, j * 16, 3) && (getTile(i, j) == WALL || isBrick(i, j))) {
         return true;
       }
-      if (enemyCollidedWith(enemy, player.x, player.y)) {
+      if (collidedWith(enemy.x, enemy.y, player.x, player.y, 3)) {
         killPlayer();
       }
     }

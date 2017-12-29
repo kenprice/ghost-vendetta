@@ -32,7 +32,6 @@ bool addEnemy(byte x, byte y);
 void killEnemiesAt(byte x, byte y);
 bool spawnEnemy();
 void drawEnemies();
-bool enemyCollidedWith(Enemy enemy, int bx, int by);
 void updateEnemies();
 void updateSnake(Enemy& enemy);
 

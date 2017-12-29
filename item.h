@@ -18,6 +18,7 @@ typedef struct {
   byte y;
   byte frame;
   bool active;
+  bool opening;
 } TreasureChest;
 
 // globals ///////////////////////////////////////////////////////////////////
@@ -25,6 +26,7 @@ extern TreasureChest treasureChests[MAX_CHESTS];
 
 // functions /////////////////////////////////////////////////////////////////
 void spawnChests();
+void updateChests();
 void drawChests(int posX, int posY);
 
 #endif
