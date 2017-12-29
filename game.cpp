@@ -11,18 +11,6 @@ void resetGameState() {
   initializeBombs();
 }
 
-void draw() {
-  unsigned char player_sprite = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
-
-  int cam_x_offset = 128/2-8;
-  int cam_y_offset = 64/2-8;
-  
-  arduboy.drawBitmap(cam_x_offset, cam_y_offset, sprites + GHOST_SPRITES_OFFSET + (player_sprite * SPRITE_COL_OFFSET), 16, 16, WHITE);
-
-  drawLevel(player.x, player.y);
-  drawBricks(player.x, player.y);
-}
-
 void stateGamePrepareLevel() {
   resetGameState();
   generateBricks();
@@ -40,7 +28,7 @@ void stateGameNextLevel() {
 }
 
 void stateGamePlaying() {
-  updatePlayer(player);
+  updatePlayer();
   updateBombs();
   updateEnemies();
 
@@ -53,9 +41,11 @@ void stateGamePlaying() {
     gameState = STATE_GAME_NEXT_LEVEL;
   }
 
-  draw();
+  drawLevel(player.x, player.y);
+  drawBricks(player.x, player.y);
   drawBombs();
   drawEnemies();
+  drawPlayer();
 }
 
 void stateGameOver() {

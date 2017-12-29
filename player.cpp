@@ -3,6 +3,7 @@
 #include "level.h"
 #include "bomb.h"
 #include "brick.h"
+#include "bitmap.h"
 
 Player player;
 
@@ -17,7 +18,9 @@ void initializePlayer() {
   player.state = ALIVE;
   player.cooldown = 100;
   player.cooldownCounter = 0;
+  player.direction = PLAYER_DIRECTION_RIGHT;
   player.speed = 1;
+  player.spriteFrame = 0;
 }
 
 void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy);
@@ -107,6 +110,11 @@ void handlePlayerMove() {
   bool up = arduboy.pressed(UP_BUTTON);
   bool down = arduboy.pressed(DOWN_BUTTON);
 
+  if (left) player.direction = PLAYER_DIRECTION_LEFT;
+  if (right) player.direction = PLAYER_DIRECTION_RIGHT;
+  if (up) player.direction = PLAYER_DIRECTION_UP;
+  if (down) player.direction = PLAYER_DIRECTION_DOWN;
+
   bool dpad_pressed = left || right || up || down;
   if (dpad_pressed) player.frame = player.frame + 1 % 60;
 
@@ -145,7 +153,7 @@ void handlePlayerMove() {
   }
 }
 
-void updatePlayer(Player& player) {
+void updatePlayer() {
   if (player.cooldownCounter > 0) {
     player.cooldownCounter--;
   }
@@ -161,6 +169,35 @@ void updatePlayer(Player& player) {
       gameState = STATE_GAME_OVER;
     }
   }
+}
+
+void drawPlayer() {
+  player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
+
+  int cam_x_offset = 128/2-8;
+  int cam_y_offset = 64/2-8;
+
+  int spriteAddress = sprites + BANSHEE_SPRITE_OFFSET;
+
+  switch (player.direction) {
+    case PLAYER_DIRECTION_UP:
+      spriteAddress += ((player.spriteFrame % 2) + 2) * SPRITE_COL_OFFSET;
+      break;
+    case PLAYER_DIRECTION_DOWN:
+      spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET;
+      break;
+    case PLAYER_DIRECTION_LEFT:
+    case PLAYER_DIRECTION_RIGHT:
+      spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET + 32;
+      break;
+  }
+
+  bool movingHorizontal = player.direction == PLAYER_DIRECTION_LEFT || player.direction == PLAYER_DIRECTION_RIGHT;
+  bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
+  
+  ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE);
+
+  
 }
 
 /**

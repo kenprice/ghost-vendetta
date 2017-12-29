@@ -34,4 +34,9 @@ extern byte gameState;
 
 extern unsigned char game_frame;
 
+// Ardbitmap /////////////////////////////////////////////////////////////////
+#define ARDBITMAP_SBUF arduboy.getBuffer()
+#include <ArdBitmap.h>
+extern ArdBitmap<WIDTH, HEIGHT> ardbitmap;
+
 #endif
