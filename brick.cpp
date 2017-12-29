@@ -3,10 +3,12 @@
 #include "bitmap.h"
 
 byte bricks[NUM_LEVEL_TILES/8];
+DestroyedBrick destroyedBricks[MAX_DESTROYED_BRICKS];
 
 void clearBricks() {
   for (int i = 0; i < NUM_LEVEL_TILES / 8; i++) {
     bricks[i] = 0x00;
+    destroyedBricks[i].active = false;
   }
 }
 
@@ -32,6 +34,17 @@ void generateBricks() {
   }
 }
 
+/**
+ * This function updates destroyed bricks
+ */
+void updateBricks() {
+  for (int i = 0; i < MAX_DESTROYED_BRICKS; i++) {
+    if (!destroyedBricks[i].active) continue;
+    destroyedBricks[i].lifetime--;
+    if (destroyedBricks[i].lifetime <= 0) destroyedBricks[i].active = false;
+  }
+}
+
 void drawBricks(int posX, int posY) {
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j = 0; j < BOARD_DIM; j++) {
@@ -41,8 +54,28 @@ void drawBricks(int posX, int posY) {
       if (isBrick(i, j)) {
           arduboy.drawBitmap(wx - 16, wy - 16, sprites + TREE_SPRITE_OFFSET, 16, 16, WHITE);
       }
+      if (isDestroyedBrick(i, j)) {
+          arduboy.drawBitmap(wx - 16, wy - 16, sprites + TREE_DEAD_SPRITE_OFFSET, 16, 16, WHITE);
+      }
     }
   }
 }
 
+void addDestroyedBrick(byte x, byte y) {
+  for (int i = 0; i < MAX_DESTROYED_BRICKS; i++) {
+    if (destroyedBricks[i].active) continue;
+    destroyedBricks[i].active = true;
+    destroyedBricks[i].lifetime = 20;
+    destroyedBricks[i].x = x;
+    destroyedBricks[i].y = y;
+  }
+}
+
+bool isDestroyedBrick(byte x, byte y) {
+  for (int i = 0; i < MAX_DESTROYED_BRICKS; i++) {
+    if (!destroyedBricks[i].active) continue;
+    if (destroyedBricks[i].x == x && destroyedBricks[i].y == y) return true; 
+  }
+  return false;
+}
 

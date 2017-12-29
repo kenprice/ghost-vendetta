@@ -19,9 +19,10 @@ void initializeBombs() {
 /**
    Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
 */
-bool destroyBrick(int x, int y) {
+bool destroyBrick(byte x, byte y) {
   if (isBrick(x, y)) {
     setBrick(x, y, false);
+    addDestroyedBrick(x, y);
     return true;
   }
   return false;
@@ -35,12 +36,8 @@ bool destroyPlayer(int x, int y) {
 
 void destroyBricks(Bomb& bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x + i, bomb.y) == WALL) {
+    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
       bomb.blastEast = i - 1;
-      break;
-    }
-    if (destroyBrick(bomb.x + i, bomb.y)) {
-      bomb.blastEast = i;
       break;
     }
   }
@@ -138,6 +135,16 @@ void updateBombs() {
   }
 }
 
+/**
+ * Draw bomb blast unless an obstruction is in the way
+ * wx, wy = Where to draw sprite, in pixel coordinates
+ * x, y = Where to check for obstruction, in tile coordinates
+ */
+void drawBombBlast(int wx, int wy, byte x, byte y) {
+  if (isDestroyedBrick(x, y)) return;
+  arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+}
+
 void drawBomb(Bomb bomb) {
   int cam_x_offset = 128 / 2 - 8;
   int cam_y_offset = 64 / 2 - 8;
@@ -146,18 +153,10 @@ void drawBomb(Bomb bomb) {
 
   if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    for (int i = 1; i <= bomb.blastEast; i++) {
-      arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    }
-    for (int i = 1; i <= bomb.blastWest; i++) {
-      arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    }
-    for (int i = 1; i <= bomb.blastSouth; i++) {
-      arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    }
-    for (int i = 1; i <= bomb.blastNorth; i++) {
-      arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
-    }
+    for (int i = 1; i <= bomb.blastEast; i++)  drawBombBlast(wx + (i * 16), wy, bomb.x + i, bomb.y);
+    for (int i = 1; i <= bomb.blastWest; i++)  drawBombBlast(wx - (i * 16), wy, bomb.x - i, bomb.y);
+    for (int i = 1; i <= bomb.blastNorth; i++) drawBombBlast(wx, wy - (i * 16), bomb.x, bomb.y - i);
+    for (int i = 1; i <= bomb.blastSouth; i++) drawBombBlast(wx, wy + (i * 16), bomb.x, bomb.y + i);
   } else {
     arduboy.drawBitmap(wx + 4, wy + 6, sprites + BOMB_SPRITE_OFFSET, 8, 8, WHITE);
 
