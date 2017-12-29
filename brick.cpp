@@ -68,6 +68,7 @@ void addDestroyedBrick(byte x, byte y) {
     destroyedBricks[i].lifetime = 20;
     destroyedBricks[i].x = x;
     destroyedBricks[i].y = y;
+    return;
   }
 }
 
