@@ -42,27 +42,19 @@ void destroyBricks(Bomb& bomb) {
     }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x - i, bomb.y) == WALL) {
+    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
       bomb.blastWest = i - 1;
       break;
     }
-    if (destroyBrick(bomb.x - i, bomb.y)) {
-      bomb.blastWest = i;
-      break;
-    }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x, bomb.y + i) == WALL) {
+    if (destroyBrick(bomb.x, bomb.y + i) || getTile(bomb.x, bomb.y + i) == WALL) {
       bomb.blastSouth = i - 1;
       break;
     }
-    if (destroyBrick(bomb.x, bomb.y + i)) {
-      bomb.blastSouth = i;
-      break;
-    }
   }
   for (int i = 1; i <= bomb.blastRadius; i++) {
-    if (getTile(bomb.x, bomb.y - i) == WALL) {
+    if (destroyBrick(bomb.x, bomb.y - i) || getTile(bomb.x, bomb.y - i) == WALL) {
       bomb.blastNorth = i - 1;
       break;
     }
@@ -115,7 +107,7 @@ void placeBomb(int x, int y) {
 void updateBomb(Bomb& bomb) {
   bomb.lifetime--;
   if (!bomb.exploding && bomb.lifetime <= 0) {
-    bomb.lifetime = 25;
+    bomb.lifetime = 20;
     bomb.exploding = true;
     destroyBricks(bomb);
   }
