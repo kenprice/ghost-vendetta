@@ -24,6 +24,7 @@ bool isBrick(unsigned int posX, unsigned int posY) {
 }
 
 void generateBricks() {
+  clearBricks();
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j= 0; j < BOARD_DIM; j++) {
       if (getTile(i, j) != BRICK_SPAWN) continue;
