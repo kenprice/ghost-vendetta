@@ -195,9 +195,7 @@ void drawPlayer() {
   bool movingHorizontal = player.direction == PLAYER_DIRECTION_LEFT || player.direction == PLAYER_DIRECTION_RIGHT;
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
   
-  ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE);
-
-  
+  ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE); 
 }
 
 /**
@@ -208,6 +206,7 @@ bool playerCollidedWith(int bx, int by) {
 }
 
 void killPlayer() {
+  if (player.state == DYING) return;
   player.frame = 0;
   player.state = DYING;
 }
