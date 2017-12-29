@@ -2,11 +2,14 @@
 #define SPRITE_ROW_OFFSET       256
 
 #define BANSHEE_SPRITE_OFFSET   0
+#define SNAKE_SPRITE_OFFSET     160
 
-const unsigned char PROGMEM SNAKE_SPRITES_OFFSET = 64;
-const unsigned char PROGMEM FIRE_SPRITES_OFFSET = 96;
-const unsigned char PROGMEM WALL_SPRITES_OFFSET = 192;
-const unsigned char PROGMEM BRICK_SPRITES_OFFSET = 128;
+#define WALL_1_SPRITE_OFFSET    SPRITE_COL_OFFSET * 7 + 96
+#define TREE_SPRITE_OFFSET      SPRITE_COL_OFFSET * 4
+
+#define BOMB_SPRITE_OFFSET      SPRITE_COL_OFFSET + 96
+
+#define FIRE_SPRITE_OFFSET      64
 
 const unsigned char sprites[] PROGMEM = {
 0x00, 0xc0, 0x30, 0x88, 0x44, 0x44, 0xa2, 0x12, 0x12, 0xa2, 0x44, 0x44, 0x88, 0x30, 0xc0, 0x00,

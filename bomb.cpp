@@ -145,21 +145,21 @@ void drawBomb(Bomb bomb) {
   int wy = bomb.y * 16 + cam_y_offset - player.y;
 
   if (bomb.exploding) {
-    arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    arduboy.drawBitmap(wx, wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     for (int i = 1; i <= bomb.blastEast; i++) {
-      arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+      arduboy.drawBitmap(wx + (i * 16), wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastWest; i++) {
-      arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+      arduboy.drawBitmap(wx - (i * 16), wy, sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastSouth; i++) {
-      arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+      arduboy.drawBitmap(wx, wy + (i * 16), sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
     for (int i = 1; i <= bomb.blastNorth; i++) {
-      arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITES_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+      arduboy.drawBitmap(wx, wy - (i * 16), sprites + FIRE_SPRITE_OFFSET + (game_frame / 5 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     }
   } else {
-    arduboy.drawBitmap(wx + 4, wy + 6, sprites + SPRITE_COL_OFFSET + 96, 8, 8, WHITE);
+    arduboy.drawBitmap(wx + 4, wy + 6, sprites + BOMB_SPRITE_OFFSET, 8, 8, WHITE);
 
     for (int i = 0; i < 3; i++) {
       arduboy.drawPixel(wx + 3 + random(7), wy - 1 + random(7));
