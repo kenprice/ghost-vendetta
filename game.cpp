@@ -5,6 +5,7 @@
 #include "bomb.h"
 #include "brick.h"
 #include "enemy.h"
+#include "item.h"
 
 void resetGameState() {
   initializePlayer();
@@ -14,6 +15,7 @@ void resetGameState() {
 void stateGamePrepareLevel() {
   resetGameState();
   generateBricks();
+  spawnChests();
 
   clearEnemies();
   for (int i = 0; i < level + 3; i++) {
@@ -47,6 +49,7 @@ void stateGamePlaying() {
   drawBombs();
   drawEnemies();
   drawPlayer();
+  drawChests(player.x, player.y);
 }
 
 void stateGameOver() {

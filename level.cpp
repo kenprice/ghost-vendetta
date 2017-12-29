@@ -95,6 +95,12 @@ PROGMEM const byte maps[][MAP_DIM*MAP_DIM] = {
   }
 };
 
+PROGMEM const byte itemSpawnLocations[][10] = {
+  // Format: <item1 x>, <item1 y>, <item2 x>, <item2 y>...
+  // 0, 0 for no item
+  {3, 3,    0, 0,    0, 0,    0, 0,    0, 0}
+};
+
 byte getTile(unsigned int posX, unsigned int posY) {
   return pgm_read_byte(
     &blocks[

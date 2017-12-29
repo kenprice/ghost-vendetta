@@ -17,6 +17,7 @@
 extern byte level;
 extern PROGMEM const byte blocks[][16];
 extern PROGMEM const byte maps[][MAP_DIM*MAP_DIM];
+extern PROGMEM const byte itemSpawnLocations[][10];
 
 // functions /////////////////////////////////////////////////////////////////
 byte getTile(unsigned int posX, unsigned int posY);
