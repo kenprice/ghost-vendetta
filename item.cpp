@@ -51,7 +51,7 @@ void updateChests() {
 }
 
 void drawItem(TreasureChest chest, int wx, int wy) {
-  arduboy.drawBitmap(wx + 4, wy + 6 - min(chest.frame, 7), SPRITES + ITEM_APPLE_SPRITE_OFFSET, 8, 8, WHITE);
+  arduboy.drawBitmap(wx + 4, wy + 6 - min(chest.frame, 7), SPRITES_8 + ITEM_APPLE_SPRITE_OFFSET, 8, 8, WHITE);
 }
 
 void drawChest(TreasureChest chest, int posX, int posY) {
