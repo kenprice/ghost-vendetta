@@ -5,8 +5,8 @@
 typedef void (*FunctionPointer) ();
 const FunctionPointer PROGMEM mainGameLoop[] =
 {
-  drawTiles,
   NULL,
+  stateMainMenu,
   NULL,
   NULL,
   NULL,

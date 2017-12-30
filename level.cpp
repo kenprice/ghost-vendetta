@@ -3,7 +3,7 @@
 #include "bitmap.h"
 #include "player.h"
 
-byte level = 1;
+byte level = 0;
 
 PROGMEM const byte blocks[][16] = {
   {

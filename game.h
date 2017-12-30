@@ -2,6 +2,7 @@
 #define _GAME_STATE
 #include "globals.h"
 
+void stateMainMenu();
 void stateGamePrepareLevel();
 void stateGameNextLevel();
 void stateGamePlaying();
