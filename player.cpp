@@ -177,7 +177,7 @@ void drawPlayer() {
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
 
-  int spriteAddress = sprites + BANSHEE_SPRITE_OFFSET;
+  int spriteAddress = SPRITES + BANSHEE_SPRITE_OFFSET;
 
   switch (player.direction) {
     case PLAYER_DIRECTION_UP:

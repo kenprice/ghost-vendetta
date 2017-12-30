@@ -2,10 +2,17 @@
 #include "game.h"
 #include "globals.h"
 
+// TODO: Delete after sprite shit done
+void drawTiles() {
+  for (unsigned char i = 0; i < 128; i++) {
+    arduboy.drawBitmap((i / 8) * 8, (i * 8) % 64, SPRITES + (i * 8), 8, 8, WHITE);
+  }
+}
+
 typedef void (*FunctionPointer) ();
 const FunctionPointer PROGMEM mainGameLoop[] =
 {
-  NULL,
+  drawTiles,
   NULL,
   NULL,
   NULL,
@@ -26,6 +33,8 @@ void setup() {
 }
 
 void loop() {
+  // gameState = 0; // TODO: Delete after sprite shit done
+  
   if (!(arduboy.nextFrame())) return;
   arduboy.pollButtons();
   arduboy.clear();

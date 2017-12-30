@@ -77,7 +77,7 @@ void drawEnemies() {
     if (!enemies[i].active) continue;
     int wx = enemies[i].x + cam_x_offset - player.x;
     int wy = enemies[i].y + cam_y_offset - player.y;
-    arduboy.drawBitmap(wx, wy, sprites + SNAKE_SPRITE_OFFSET + (game_frame / 20 % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE); 
+    arduboy.drawBitmap(wx, wy, SPRITES + (game_frame / 20 % 2 ? SNAKE_1_SPRITE_OFFSET : SNAKE_2_SPRITE_OFFSET), 8, 8, WHITE); 
   }
 }
 

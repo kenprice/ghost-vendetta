@@ -51,17 +51,17 @@ void updateChests() {
 }
 
 void drawItem(TreasureChest chest, int wx, int wy) {
-  arduboy.drawBitmap(wx + 4, wy + 6 - min(chest.frame, 7), sprites + ITEM_APPLE_SPRITE_OFFSET, 8, 8, WHITE);
+  arduboy.drawBitmap(wx + 4, wy + 6 - min(chest.frame, 7), SPRITES + ITEM_APPLE_SPRITE_OFFSET, 8, 8, WHITE);
 }
 
 void drawChest(TreasureChest chest, int posX, int posY) {
   int wx = chest.x * 16 + CAM_X_OFFSET - posX;
   int wy = chest.y * 16 + CAM_Y_OFFSET - posY;
   if (chest.opening) {
-    if (chest.frame < 5) arduboy.drawBitmap(wx, wy, sprites + CHEST_OPEN_SPRITE_OFFSET, 16, 16, WHITE);
+    if (chest.frame < 5) arduboy.drawBitmap(wx, wy, SPRITES + CHEST_OPEN_SPRITE_OFFSET, 16, 16, WHITE);
     drawItem(chest, wx, wy);
   } else {
-    arduboy.drawBitmap(wx, wy, sprites + CHEST_SPRITE_OFFSET, 16, 16, WHITE);
+    arduboy.drawBitmap(wx, wy, SPRITES + CHEST_SPRITE_OFFSET, 16, 16, WHITE);
   }
 }
 
