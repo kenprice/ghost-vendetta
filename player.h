@@ -22,7 +22,6 @@ typedef struct {
   int dy;
   int cooldown;
   int cooldownCounter;
-  int speed;
   char direction;
   unsigned char frame;
   unsigned char spriteFrame;

@@ -19,7 +19,6 @@ void initializePlayer() {
   player.cooldown = 100;
   player.cooldownCounter = 0;
   player.direction = PLAYER_DIRECTION_RIGHT;
-  player.speed = 1;
   player.spriteFrame = 0;
 }
 
@@ -117,8 +116,6 @@ void handlePlayerMove() {
 
   bool dpad_pressed = left || right || up || down;
   if (dpad_pressed) player.frame = player.frame + 1 % 60;
-
-  player.speed = arduboy.pressed(A_BUTTON) ? 2 : 1;
 
   // Move horizontally
   if (left) {
