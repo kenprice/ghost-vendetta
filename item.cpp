@@ -20,17 +20,14 @@ void initializeChests() {
 void spawnChests() {
   initializeChests();
   for (int i = 0; i < MAX_CHESTS; i++) {
-    int x = pgm_read_byte(&itemSpawnLocations[level-1][0]);
-    int y = pgm_read_byte(&itemSpawnLocations[level-1][1]);
+    int x = pgm_read_byte(&itemSpawns[level-1][i*3+1]);
+    int y = pgm_read_byte(&itemSpawns[level-1][i*3+2]);
     if (x == 0 && y == 0) return;
+    treasureChests[i].id = pgm_read_byte(&itemSpawns[level-1][i*3]);
     treasureChests[i].x = x;
     treasureChests[i].y = y;
     treasureChests[i].active = true;
   }
-}
-
-void handleItem(byte itemId) {
-  
 }
 
 void updateChests() {
@@ -44,7 +41,11 @@ void updateChests() {
       treasureChests[i].frame++;
     }
     if (treasureChests[i].frame == 10) {
-      handleItem(treasureChests[i].id);
+      switch (treasureChests[i].id) {
+        case ITEM_APPLE:
+          player.health++;
+          break;
+      }
       treasureChests[i].active = false;
     }
   }

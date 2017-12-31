@@ -2,6 +2,7 @@
 #include "level.h"
 #include "bitmap.h"
 #include "player.h"
+#include "item.h"
 
 byte level = 0;
 
@@ -95,10 +96,15 @@ PROGMEM const byte maps[][MAP_DIM*MAP_DIM] = {
   }
 };
 
-PROGMEM const byte itemSpawnLocations[][10] = {
-  // Format: <item1 x>, <item1 y>, <item2 x>, <item2 y>...
+PROGMEM const byte itemSpawns[][15] = {
+  // Format: <item1 id>, <item1 x>, <item1 y>, <item2 id>, <item2 x>, <item2 y>...
   // 0, 0 for no item
-  {1, 2,    0, 0,    0, 0,    0, 0,    0, 0}
+  {
+    ITEM_APPLE, 1, 2,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0}
 };
 
 byte getTile(unsigned int posX, unsigned int posY) {

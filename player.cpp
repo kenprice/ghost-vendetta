@@ -213,7 +213,9 @@ bool playerCollidedWith(int bx, int by) {
 void damagePlayer() {
   if (player.state == DYING || player.flashFrame) return;
 
-  player.health--;
+  if (player.health > 0) {
+    player.health--;
+  }
 
   if (player.health == 0) {
       player.frame = 0;
