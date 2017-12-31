@@ -1,6 +1,7 @@
 #ifndef _GLOBALS
 #define _GLOBALS
 
+#include <Arduino.h>
 #include <Arduboy2.h>
 #include <ArduboyTones.h>
 

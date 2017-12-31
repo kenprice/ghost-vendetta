@@ -13,7 +13,7 @@
 #define PLAYER_FLASHING_FRAMES  20    // Number of frames it takes for player to lose flash
 
 // structures ////////////////////////////////////////////////////////////////
-enum alive_state { ALIVE, DYING };
+enum AliveState { ALIVE, DYING };
 
 typedef struct {
   int HACK_UNUSED_PADDING;      // Temporarily mitigate inexplicable memory corruption bug
@@ -26,7 +26,7 @@ typedef struct {
   unsigned direction;
   unsigned char frame;          // General frame
   unsigned char spriteFrame;    // Animation frame
-  enum alive_state state;
+  enum AliveState state;
 } Player;
 
 // globals ///////////////////////////////////////////////////////////////////

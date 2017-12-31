@@ -5,6 +5,8 @@
 
 // constants /////////////////////////////////////////////////////////////////
 #define FLOOR         0x01        // Walkable floor tile
+#define BOULDER_SPAWN 0x07        // Tile that spawns a boulder at beginning of level
+#define SHRUB_SPAWN   0x08        // Tile that spawns a shrub at beginning of level
 #define BRICK_SPAWN   0x09        // Tile that spawns bricks at beginning of level
 #define WALL          0x0A
 
