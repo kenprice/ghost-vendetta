@@ -104,7 +104,15 @@ PROGMEM const byte itemSpawns[][15] = {
     0, 0, 0,
     0, 0, 0,
     0, 0, 0,
-    0, 0, 0}
+    0, 0, 0
+  },
+  {
+    ITEM_APPLE, 5, 5,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0
+  },
 };
 
 byte getTile(unsigned int posX, unsigned int posY) {

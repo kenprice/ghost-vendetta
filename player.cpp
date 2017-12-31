@@ -5,7 +5,10 @@
 #include "brick.h"
 #include "bitmap.h"
 
-const uint16_t SOUND_PLAYER_HURT[] PROGMEM = { NOTE_A7, 50, NOTE_REST, 50, NOTE_A7, 50, NOTE_REST, 50, NOTE_A7, 50, NOTE_REST, 50, TONES_END };
+const uint16_t SOUND_PLAYER_HURT[] PROGMEM = {
+  NOTE_A7, 25, NOTE_REST, 25, NOTE_A7, 25, NOTE_REST, 25,
+  NOTE_A7, 25, TONES_END
+};
 
 Player player;
 

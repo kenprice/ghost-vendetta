@@ -5,6 +5,8 @@
 #include "player.h"
 #include "collision.h"
 
+const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {NOTE_C7, 25, NOTE_A7, 25, NOTE_C7, 25, TONES_END };
+
 TreasureChest treasureChests[MAX_CHESTS];
 
 void initializeChests() {
@@ -14,6 +16,7 @@ void initializeChests() {
     treasureChests[i].y = 0;
     treasureChests[i].active = false;
     treasureChests[i].frame = 0;
+    treasureChests[i].opening = false;
   }
 }
 
@@ -36,6 +39,7 @@ void updateChests() {
     if (collidedWith(treasureChests[i].x * 16, treasureChests[i].y * 16, player.x, player.y, 3)) {
       // Open chest
       treasureChests[i].opening = true;
+      sound.tones(SOUND_CHEST_OPEN);
     }
     if (treasureChests[i].opening && arduboy.everyXFrames(3)) {
       treasureChests[i].frame++;
@@ -47,6 +51,7 @@ void updateChests() {
           break;
       }
       treasureChests[i].active = false;
+      treasureChests[i].opening = false;
     }
   }
 }
