@@ -21,6 +21,6 @@ extern PROGMEM const byte itemSpawns[][15];
 
 // functions /////////////////////////////////////////////////////////////////
 byte getTile(unsigned int posX, unsigned int posY);
-void drawLevel(int posX, int posY);
+void drawLevel(byte posX, byte posY);
 
 #endif

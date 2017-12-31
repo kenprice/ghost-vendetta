@@ -2,6 +2,7 @@
 #define _GLOBALS
 
 #include <Arduboy2.h>
+#include <ArduboyTones.h>
 
 // constants /////////////////////////////////////////////////////////////////
 
@@ -31,8 +32,8 @@
 
 extern Arduboy2Base arduboy;
 extern byte gameState;
-
 extern unsigned char game_frame;
+extern ArduboyTones sound;
 
 // Ardbitmap /////////////////////////////////////////////////////////////////
 #define ARDBITMAP_SBUF arduboy.getBuffer()

@@ -16,14 +16,11 @@
 enum alive_state { ALIVE, DYING };
 
 typedef struct {
+  int HACK_UNUSED_PADDING;      // Temporarily mitigate inexplicable memory corruption bug
   int x;
   int y;
-  int last_x;
-  int last_y;
-  int dx;
-  int dy;
-  int cooldown;
-  int cooldownCounter;
+  unsigned char cooldown;
+  unsigned char cooldownCounter;
   unsigned char health;
   unsigned char flashFrame;     // How many frames to lose flash (temp invincibility)
   unsigned direction;
@@ -42,5 +39,6 @@ void drawPlayer();
 void movePlayer(int dx, int dy);
 bool playerCollidedWith(int bx, int by);
 void damagePlayer();
+void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy, bool recursed);
 
 #endif

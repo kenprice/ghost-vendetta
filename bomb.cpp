@@ -6,6 +6,9 @@
 #include "brick.h"
 #include "enemy.h"
 
+const uint16_t SOUND_BOMB_PLACE[] PROGMEM = { NOTE_A1, 100, TONES_END };
+const uint16_t SOUND_BOMB_EXPLODE[] PROGMEM = { NOTE_C1, 500, TONES_END };
+
 Bomb bombs[MAX_BOMBS];
 
 void initializeBombs() {
@@ -32,7 +35,7 @@ bool handleCollidePlayer(int x, int y) {
   if (playerCollidedWith(x, y)) {
     damagePlayer();
   }
-}
+}   
 
 void destroyBricks(Bomb& bomb) {
   for (int i = 1; i <= bomb.blastRadius; i++) {
@@ -102,6 +105,7 @@ void placeBomb(int x, int y) {
   bombs[i].blastSouth = bombs[i].blastRadius;
   bombs[i].blastEast = bombs[i].blastRadius;
   bombs[i].blastWest = bombs[i].blastRadius;
+  sound.tones(SOUND_BOMB_PLACE);
 }
 
 void updateBomb(Bomb& bomb) {
@@ -110,6 +114,7 @@ void updateBomb(Bomb& bomb) {
     bomb.lifetime = 20;
     bomb.exploding = true;
     destroyBricks(bomb);
+    sound.tones(SOUND_BOMB_EXPLODE);
   }
   if (bomb.exploding) {
     explosion(bomb);

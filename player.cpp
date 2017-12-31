@@ -5,15 +5,13 @@
 #include "brick.h"
 #include "bitmap.h"
 
+const uint16_t SOUND_PLAYER_HURT[] PROGMEM = { NOTE_A7, 50, NOTE_REST, 50, NOTE_A7, 50, NOTE_REST, 50, NOTE_A7, 50, NOTE_REST, 50, TONES_END };
+
 Player player;
 
 void initializePlayer() {
   player.x = 16;
   player.y = 16;
-  player.last_x = 16;
-  player.last_y = 16;
-  player.dx = 0;
-  player.dy = 0;
   player.frame = 0;
   player.state = ALIVE;
   player.cooldown = 100;
@@ -23,8 +21,6 @@ void initializePlayer() {
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
 }
-
-void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy);
 
 bool isSolid(int x, int y) {
   // Tile coordinates
@@ -36,21 +32,21 @@ void horizontalCollide(int& x, int& y, char& vx, char& vy, int i) {
     x = (i + 1) * 16;
     if (!isSolid(x/16 - 1, y / 16) && !isSolid(x/16, y / 16) && vy == 0 && (y % 16) <= COLLISION_PADDING) {
       y--;
-      mapCollide(x, y, false, vx, vy);
+      mapCollide(x, y, false, vx, vy, true);
     }
     if (!isSolid(x/16 - 1, y / 16 + 1) && !isSolid(x/16, y / 16 + 1) && vy == 0 && (y % 16) >= 16 - COLLISION_PADDING) {
       y++;
-      mapCollide(x, y, false, vx, vy);
+      mapCollide(x, y, false, vx, vy, true);
     }
   } else if (vx > 0) {
     x = i * 16 - 16;
     if (!isSolid(x/16 + 1, y / 16) && !isSolid(x/16, y / 16) && vy == 0 && (y % 16) <= COLLISION_PADDING) {
       y--;
-      mapCollide(x, y, false, vx, vy);
+      mapCollide(x, y, false, vx, vy, true);
     }
     if (!isSolid(x/16 + 1, y / 16 + 1) && !isSolid(x/16, y / 16 + 1) && vy == 0 && (y % 16) >= 16 - COLLISION_PADDING) {
       y++;
-      mapCollide(x, y, false, vx, vy);
+      mapCollide(x, y, false, vx, vy, true);
     }
   }
 }
@@ -60,35 +56,34 @@ void verticalCollide(int& x, int& y, char& vx, char& vy, int j) {
     y = (j + 1) * 16;
     if (!isSolid(x / 16, y / 16 - 1) && !isSolid(x / 16, y / 16) && vx == 0 && (x % 16) <= COLLISION_PADDING) {
       x--;
-      mapCollide(x, y, true, vx, vy);
+      mapCollide(x, y, true, vx, vy, true);
     }
     if (!isSolid(x / 16 + 1, y / 16 - 1) && !isSolid(x / 16 + 1, y / 16 - 1) && vx == 0 && (x % 16) >= 16 - COLLISION_PADDING) {
       x++;
-      mapCollide(x, y, true, vx, vy);
+      mapCollide(x, y, true, vx, vy, true);
     }
   } else if (vy > 0) {
     y = j * 16 - 16;
     if (!isSolid(x / 16, y / 16 + 1) && !isSolid(x / 16, y / 16) && vx == 0 && (x % 16) <= COLLISION_PADDING) {
       x--;
-      mapCollide(x, y, true, vx, vy);
+      mapCollide(x, y, true, vx, vy, true);
     }
     if (!isSolid(x / 16 + 1, y / 16 + 1) && !isSolid(x / 16 + 1, y / 16 + 1) && vx == 0 && (x % 16) >= 16 - COLLISION_PADDING) {
       x++;
-      mapCollide(x, y, true, vx, vy);
+      mapCollide(x, y, true, vx, vy, true);
     }
   }
 }
 
-void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy) {
+void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy, bool recursed) {
   byte tileXMax = x % 16 != 0;
   byte tileYMax = y % 16 != 0;
   for (int i = x / 16; i <= x / 16 + tileXMax; i++) {
     for (int j = y / 16; j <= y / 16 + tileYMax; j++) {
       if (getTile(i, j) != WALL && !isBrick(i, j)) continue;
-      if (horizontal) {
+      if (horizontal && !recursed) {
         horizontalCollide(x, y, vx, vy, i);
-      }
-      else {
+      } else if (!recursed) {
         verticalCollide(x, y, vx, vy, j);
       }
       vx = 0;
@@ -128,7 +123,7 @@ void handlePlayerMove() {
 
   player.x += vx;
 
-  mapCollide(player.x, player.y, true, vx, vy);
+  mapCollide(player.x, player.y, true, vx, vy, false);
 
   // Move vertically
   if (up) { 
@@ -139,7 +134,7 @@ void handlePlayerMove() {
 
   player.y += vy;
 
-  mapCollide(player.x, player.y, false, vx, vy);
+  mapCollide(player.x, player.y, false, vx, vy, false);
 
   // Other stuff
   if(arduboy.pressed(B_BUTTON)) {
@@ -160,9 +155,6 @@ void updatePlayer() {
   if (player.flashFrame > 0 && arduboy.everyXFrames(5)) {
     player.flashFrame--;
   }
-
-  player.dx = 0;
-  player.dy = 0;
   
   handlePlayerMove();
 
@@ -223,5 +215,6 @@ void damagePlayer() {
   }
 
   player.flashFrame = PLAYER_FLASHING_FRAMES;
+  sound.tones(SOUND_PLAYER_HURT);
 }
 
