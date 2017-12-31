@@ -28,9 +28,9 @@ bool destroyBrick(byte x, byte y) {
   return false;
 }
 
-bool destroyPlayer(int x, int y) {
+bool handleCollidePlayer(int x, int y) {
   if (playerCollidedWith(x, y)) {
-    killPlayer();
+    damagePlayer();
   }
 }
 
@@ -66,22 +66,22 @@ void destroyBricks(Bomb& bomb) {
 }
 
 void explosion(Bomb bomb) {
-  destroyPlayer(bomb.x, bomb.y);
+  handleCollidePlayer(bomb.x, bomb.y);
   killEnemiesAt(bomb.x, bomb.y);
   for (int i = 1; i <= bomb.blastEast; i++) {
-    destroyPlayer(bomb.x + i, bomb.y);
+    handleCollidePlayer(bomb.x + i, bomb.y);
     killEnemiesAt(bomb.x + i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastWest; i++) {
-    destroyPlayer(bomb.x - i, bomb.y);
+    handleCollidePlayer(bomb.x - i, bomb.y);
     killEnemiesAt(bomb.x - i, bomb.y);
   }
   for (int i = 1; i <= bomb.blastSouth; i++) {
-    destroyPlayer(bomb.x, bomb.y + i);
+    handleCollidePlayer(bomb.x, bomb.y + i);
     killEnemiesAt(bomb.x, bomb.y + i);
   }
   for (int i = 1; i <= bomb.blastNorth; i++) {
-    destroyPlayer(bomb.x, bomb.y - i);
+    handleCollidePlayer(bomb.x, bomb.y - i);
     killEnemiesAt(bomb.x, bomb.y - i);
   }
 }

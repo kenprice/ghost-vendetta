@@ -18,6 +18,8 @@ void initializePlayer() {
   player.state = ALIVE;
   player.cooldown = 100;
   player.cooldownCounter = 0;
+  player.health = 1;
+  player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
 }
@@ -154,7 +156,11 @@ void updatePlayer() {
   if (player.cooldownCounter > 0) {
     player.cooldownCounter--;
   }
-  
+
+  if (player.flashFrame > 0 && arduboy.everyXFrames(5)) {
+    player.flashFrame--;
+  }
+
   player.dx = 0;
   player.dy = 0;
   
@@ -191,8 +197,10 @@ void drawPlayer() {
 
   bool movingHorizontal = player.direction == PLAYER_DIRECTION_LEFT || player.direction == PLAYER_DIRECTION_RIGHT;
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
-  
-  ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE); 
+
+  if (player.flashFrame % 2 == 0) {
+    ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE); 
+  }
 }
 
 /**
@@ -202,9 +210,16 @@ bool playerCollidedWith(int bx, int by) {
   return player.x < bx * 16 + 16 && player.x + 16 > bx * 16 && player.y < by * 16 + 16 && player.y + 16 > by * 16;
 }
 
-void killPlayer() {
-  if (player.state == DYING) return;
-  player.frame = 0;
-  player.state = DYING;
+void damagePlayer() {
+  if (player.state == DYING || player.flashFrame) return;
+
+  player.health--;
+
+  if (player.health == 0) {
+      player.frame = 0;
+      player.state = DYING;
+  }
+
+  player.flashFrame = PLAYER_FLASHING_FRAMES;
 }
 

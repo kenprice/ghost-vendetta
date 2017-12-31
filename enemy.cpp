@@ -101,7 +101,7 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
         return true;
       }
       if (collidedWith(enemy.x, enemy.y, player.x, player.y, 3)) {
-        killPlayer();
+        damagePlayer();
       }
     }
   }
