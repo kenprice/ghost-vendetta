@@ -28,7 +28,7 @@ extern int startBombs;
 
 // functions /////////////////////////////////////////////////////////////////
 void initializeBombs();
-void placeBomb(int x, int y);
+void placeBomb(byte x, byte y);
 void updateBombs();
 void drawBombs();
 
