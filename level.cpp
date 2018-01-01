@@ -152,6 +152,8 @@ PROGMEM const byte itemSpawns[][15] = {
   },
 };
 
+PROGMEM const byte brickDensity[] = {3, 4, 5};
+
 byte getTile(byte posX, byte posY) {
   return pgm_read_byte(
     &blocks[

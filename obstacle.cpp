@@ -28,9 +28,12 @@ void spawnObstacles() {
       while (obstacles[k].id != NULL && k < MAX_OBSTACLES) {
         k++;
       }
-      obstacles[k].id = obstacleType;
-      obstacles[k].x = i;
-      obstacles[k].y = j;
+
+      if (random(10) <= brickDensity[level-1]) {
+        obstacles[k].id = obstacleType;
+        obstacles[k].x = i;
+        obstacles[k].y = j;
+      }
     }
   }
 }
