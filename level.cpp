@@ -4,7 +4,7 @@
 #include "player.h"
 #include "item.h"
 
-byte level = 2;
+byte level = 0;
 
 PROGMEM const byte blocks[][16] = {
   {
@@ -269,7 +269,7 @@ void drawLevel(byte posX, byte posY) {
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
       if (getTile(i, j) == WALL) {
-          arduboy.drawBitmap(wx - 16, wy - 16, SPRITES + WALL_1_SPRITE_OFFSET, 16, 16, WHITE);
+          arduboy.drawBitmap(wx - 16, wy - 16, SPRITES + WALL_SPRITE_OFFSET + ((level - 1) % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
       }
     }
   }
