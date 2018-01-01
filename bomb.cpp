@@ -160,11 +160,11 @@ void drawBomb(Bomb bomb) {
     for (byte i = 0; i < 3; i++) {
       arduboy.drawPixel(wx + 3 + random(7), wy - 1 + random(7));
     }
-    if (bomb.lifetime > 160) arduboy.drawPixel(wx + 7, wy + 1);
-    if (bomb.lifetime > 120) arduboy.drawPixel(wx + 8, wy + 2);
-    if (bomb.lifetime > 80)  arduboy.drawPixel(wx + 7, wy + 3);
-    if (bomb.lifetime > 40)  arduboy.drawPixel(wx + 8, wy + 4);
-    if (bomb.lifetime > 0)   arduboy.drawPixel(wx + 7, wy + 5);
+    if (bomb.lifetime > 8) arduboy.drawPixel(wx + 7, wy + 1);
+    if (bomb.lifetime > 6) arduboy.drawPixel(wx + 8, wy + 2);
+    if (bomb.lifetime > 4) arduboy.drawPixel(wx + 7, wy + 3);
+    if (bomb.lifetime > 2) arduboy.drawPixel(wx + 8, wy + 4);
+    if (bomb.lifetime > 0) arduboy.drawPixel(wx + 7, wy + 5);
   }
 }
 
