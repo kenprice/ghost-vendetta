@@ -184,8 +184,10 @@ void drawPlayer() {
       spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET;
       break;
     case PLAYER_DIRECTION_LEFT:
-    case PLAYER_DIRECTION_RIGHT:
       spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET + 32;
+      break;
+    case PLAYER_DIRECTION_RIGHT:
+      spriteAddress += ((player.spriteFrame % 2) + 2) * SPRITE_COL_OFFSET + 32;
       break;
   }
 
@@ -193,7 +195,7 @@ void drawPlayer() {
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
 
   if (player.flashFrame % 2 == 0) {
-    ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE); 
+    arduboy.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE); 
   }
 }
 

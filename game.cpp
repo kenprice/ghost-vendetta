@@ -16,9 +16,6 @@ void resetGameState() {
 
 void stateMainMenu() {
   static bool start = false;
-  
-  ardbitmap.drawCompressed(0, 0, TITLE_TOP, WHITE, ALIGN_NONE, MIRROR_NONE);
-  ardbitmap.drawCompressed(0, 32, TITLE_BOTTOM, WHITE, ALIGN_NONE, MIRROR_NONE);
 
   if (arduboy.pressed(B_BUTTON)) {
     start = true;

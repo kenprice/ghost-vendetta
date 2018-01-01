@@ -5,7 +5,7 @@
 #include "player.h"
 #include "collision.h"
 
-const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {NOTE_C7, 25, NOTE_A7, 25, NOTE_C7, 25, TONES_END };
+const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {NOTE_C7, 25, NOTE_A7, 25, NOTE_C7, 25, TONES_END};
 
 TreasureChest treasureChests[MAX_CHESTS];
 

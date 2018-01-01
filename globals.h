@@ -1,7 +1,6 @@
 #ifndef _GLOBALS
 #define _GLOBALS
 
-#include <Arduino.h>
 #include <Arduboy2.h>
 #include <ArduboyTones.h>
 
@@ -35,10 +34,5 @@ extern Arduboy2Base arduboy;
 extern byte gameState;
 extern byte gameFrame;
 extern ArduboyTones sound;
-
-// Ardbitmap /////////////////////////////////////////////////////////////////
-#define ARDBITMAP_SBUF arduboy.getBuffer()
-#include <ArdBitmap.h>
-extern ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 
 #endif
