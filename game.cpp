@@ -64,9 +64,9 @@ void stateGamePlaying() {
   drawBricks(player.x, player.y);
   drawBombs();
   drawEnemies();
-  drawPlayer();
   drawChests(player.x, player.y);
   drawObstacles(player.x, player.y);
+  drawPlayer();
 }
 
 void stateGameOver() {

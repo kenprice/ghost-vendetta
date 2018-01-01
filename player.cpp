@@ -173,9 +173,6 @@ void updatePlayer() {
 void drawPlayer() {
   player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : gameFrame % 4;
 
-  int cam_x_offset = 128/2-8;
-  int cam_y_offset = 64/2-8;
-
   int spriteAddress = SPRITES + BANSHEE_SPRITE_OFFSET;
 
   switch (player.direction) {
@@ -197,7 +194,8 @@ void drawPlayer() {
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
 
   if (player.flashFrame % 2 == 0) {
-    arduboy.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE); 
+    arduboy.drawBitmap(CAM_X_OFFSET, CAM_Y_OFFSET, SPRITES + BANSHEE_SPRITE_MASK, 16, 16, BLACK);
+    arduboy.drawBitmap(CAM_X_OFFSET, CAM_Y_OFFSET, spriteAddress, 16, 16, WHITE); 
   }
 }
 
