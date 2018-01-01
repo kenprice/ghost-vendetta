@@ -52,6 +52,9 @@ void updateChests() {
         case ITEM_APPLE:
           player.health++;
           break;
+        case ITEM_FLAME:
+          player.blastRadius++;
+          break;
       }
       treasureChests[i].active = false;
       treasureChests[i].opening = false;
@@ -60,7 +63,16 @@ void updateChests() {
 }
 
 void drawItem(TreasureChest chest, int wx, int wy) {
-  arduboy.drawBitmap(wx + 4, wy + 3 - chest.frame, SPRITES_8 + ITEM_APPLE_SPRITE_OFFSET, 8, 8, WHITE);
+  int itemSpriteOffset;
+  switch (chest.id) {
+    case ITEM_APPLE:
+      itemSpriteOffset = SPRITES_8 + ITEM_APPLE_SPRITE_OFFSET;
+      break;
+    case ITEM_FLAME:
+      itemSpriteOffset = SPRITES_8 + ITEM_FLAME_SPRITE_OFFSET;
+      break;
+  }
+  arduboy.drawBitmap(wx + 4, wy + 3 - chest.frame, itemSpriteOffset, 8, 8, WHITE);
 }
 
 void drawChest(TreasureChest chest, int posX, int posY) {

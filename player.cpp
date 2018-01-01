@@ -23,6 +23,19 @@ void initializePlayer() {
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
+  player.blastRadius = 1;
+}
+
+/**
+ * Doesn't initialize player, but does reset player for when new level starts
+ */
+void startPlayerAtLevel() {
+  player.frame = 0;
+  player.state = ALIVE;
+  player.cooldown = 0;
+  player.flashFrame = PLAYER_FLASHING_FRAMES;
+  player.spriteFrame = 0;
+  player.direction = PLAYER_DIRECTION_RIGHT;
 }
 
 bool isSolid(int x, int y) {

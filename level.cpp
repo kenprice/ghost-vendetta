@@ -228,14 +228,7 @@ PROGMEM const byte itemSpawns[][15] = {
   },
   {
     ITEM_APPLE, 5, 5,
-    0, 0, 0,
-    0, 0, 0,
-    0, 0, 0,
-    0, 0, 0
-  },
-  {
-    ITEM_APPLE, 5, 5,
-    0, 0, 0,
+    ITEM_FLAME, 11, 11,
     0, 0, 0,
     0, 0, 0,
     0, 0, 0
@@ -243,6 +236,13 @@ PROGMEM const byte itemSpawns[][15] = {
   {
     ITEM_APPLE, 5, 5,
     0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0
+  },
+  {
+    ITEM_APPLE, 5, 5,
+    ITEM_FLAME, 11, 11,
     0, 0, 0,
     0, 0, 0,
     0, 0, 0

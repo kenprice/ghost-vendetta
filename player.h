@@ -23,11 +23,12 @@ typedef struct {
   byte y;
   byte cooldown : 4;
   byte health;
-  byte flashFrame;     // How many frames to lose flash (temp invincibility)
+  byte flashFrame;      // How many frames to lose flash (temp invincibility)
   byte direction;
-  byte frame;          // General frame
-  byte spriteFrame;    // Animation frame
+  byte frame;           // General frame
+  byte spriteFrame;     // Animation frame
   byte state : 2;
+  byte blastRadius : 6; // Blast radius of bombs players use
 } Player;
 
 // globals ///////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ extern Player player;
 
 // functions /////////////////////////////////////////////////////////////////
 void initializePlayer();
+void startPlayerAtLevel();
 void updatePlayer();
 void drawPlayer();
 void movePlayer(int dx, int dy);

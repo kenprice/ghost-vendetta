@@ -9,7 +9,7 @@
 #include "obstacle.h"
 
 void resetGameState() {
-  initializePlayer();
+  startPlayerAtLevel();
   initializeBombs();
   generateBricks();
   spawnChests();
@@ -41,6 +41,10 @@ void stateGamePrepareLevel() {
 void stateGameNextLevel() {
   level++;
   gameState = STATE_GAME_PREPARE_LEVEL;
+
+  if (level == 1) {
+    initializePlayer();
+  }
 }
 
 void stateGamePlaying() {

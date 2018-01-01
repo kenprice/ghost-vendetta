@@ -16,7 +16,7 @@ void initializeBombs() {
   for (byte i = 0; i < MAX_BOMBS; i++) {
     bombs[i].active = false;
     bombs[i].exploding = false;
-    bombs[i].blastRadius = 2;
+    bombs[i].blastRadius = player.blastRadius;
   }
 }
 
@@ -103,6 +103,7 @@ void placeBomb(byte x, byte y) {
   bombs[i].y = y;
   bombs[i].active = true;
   bombs[i].lifetime = 10;
+  bombs[i].blastRadius = player.blastRadius;
   bombs[i].blastNorth = bombs[i].blastRadius;
   bombs[i].blastSouth = bombs[i].blastRadius;
   bombs[i].blastEast = bombs[i].blastRadius;
