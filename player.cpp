@@ -17,8 +17,7 @@ void initializePlayer() {
   player.y = 16;
   player.frame = 0;
   player.state = ALIVE;
-  player.cooldown = 100;
-  player.cooldownCounter = 0;
+  player.cooldown = 0;
   player.health = 10;
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
@@ -141,18 +140,18 @@ void handlePlayerMove() {
 
   // Other stuff
   if(arduboy.pressed(B_BUTTON)) {
-    int fx = (player.x+8)/16;
-    int fy = (player.y+8)/16;
-    if (player.cooldownCounter == 0) {
+    byte fx = (player.x+8)/16;
+    byte fy = (player.y+8)/16;
+    if (player.cooldown == 0) {
       placeBomb(fx, fy);
-      player.cooldownCounter = player.cooldown;
+      player.cooldown = 1;
     }
   }
 }
 
 void updatePlayer() {
-  if (player.cooldownCounter > 0) {
-    player.cooldownCounter--;
+  if (player.cooldown == 1 && arduboy.everyXFrames(100)) {
+    player.cooldown = 0;
   }
 
   if (player.flashFrame > 0 && arduboy.everyXFrames(5)) {

@@ -14,20 +14,20 @@
 
 #define PLAYER_FLASHING_FRAMES  20    // Number of frames it takes for player to lose flash
 
-// structures ////////////////////////////////////////////////////////////////
-enum alive_state { ALIVE, DYING };
+#define ALIVE 0
+#define DYING 1
 
+// structures ////////////////////////////////////////////////////////////////
 typedef struct {
   byte x;
   byte y;
-  byte cooldown;
-  byte cooldownCounter;
+  bool cooldown : 1;
   byte health;
   byte flashFrame;     // How many frames to lose flash (temp invincibility)
   byte direction;
   byte frame;          // General frame
   byte spriteFrame;    // Animation frame
-  enum alive_state state;
+  byte state : 2;
 } Player;
 
 // globals ///////////////////////////////////////////////////////////////////
