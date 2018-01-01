@@ -17,9 +17,8 @@ void initializePlayer() {
   player.y = 16;
   player.frame = 0;
   player.state = ALIVE;
-  player.cooldown = 100;
-  player.cooldownCounter = 0;
-  player.health = 1;
+  player.cooldown = 0;
+  player.health = 10;
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
@@ -30,7 +29,7 @@ bool isSolid(int x, int y) {
   return getTile(x, y) == WALL || isBrick(x, y);
 }
 
-void horizontalCollide(int& x, int& y, char& vx, char& vy, int i) {
+void horizontalCollide(byte& x, byte& y, char& vx, char& vy, int i) {
   if (vx < 0) {
     x = (i + 1) * 16;
     if (!isSolid(x/16 - 1, y / 16) && !isSolid(x/16, y / 16) && vy == 0 && (y % 16) <= COLLISION_PADDING) {
@@ -54,7 +53,7 @@ void horizontalCollide(int& x, int& y, char& vx, char& vy, int i) {
   }
 }
 
-void verticalCollide(int& x, int& y, char& vx, char& vy, int j) {
+void verticalCollide(byte& x, byte& y, char& vx, char& vy, int j) {
   if (vy < 0) {
     y = (j + 1) * 16;
     if (!isSolid(x / 16, y / 16 - 1) && !isSolid(x / 16, y / 16) && vx == 0 && (x % 16) <= COLLISION_PADDING) {
@@ -78,7 +77,7 @@ void verticalCollide(int& x, int& y, char& vx, char& vy, int j) {
   }
 }
 
-void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy, bool recursed) {
+void mapCollide(byte& x, byte& y, bool horizontal, char& vx, char& vy, bool recursed) {
   byte tileXMax = x % 16 != 0;
   byte tileYMax = y % 16 != 0;
   for (int i = x / 16; i <= x / 16 + tileXMax; i++) {
@@ -141,18 +140,18 @@ void handlePlayerMove() {
 
   // Other stuff
   if(arduboy.pressed(B_BUTTON)) {
-    int fx = (player.x+8)/16;
-    int fy = (player.y+8)/16;
-    if (player.cooldownCounter == 0) {
+    byte fx = (player.x+8)/16;
+    byte fy = (player.y+8)/16;
+    if (player.cooldown == 0) {
       placeBomb(fx, fy);
-      player.cooldownCounter = player.cooldown;
+      player.cooldown = 1;
     }
   }
 }
 
 void updatePlayer() {
-  if (player.cooldownCounter > 0) {
-    player.cooldownCounter--;
+  if (player.cooldown == 1 && arduboy.everyXFrames(100)) {
+    player.cooldown = 0;
   }
 
   if (player.flashFrame > 0 && arduboy.everyXFrames(5)) {
@@ -170,7 +169,7 @@ void updatePlayer() {
 }
 
 void drawPlayer() {
-  player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
+  player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : gameFrame % 4;
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;
@@ -185,8 +184,10 @@ void drawPlayer() {
       spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET;
       break;
     case PLAYER_DIRECTION_LEFT:
-    case PLAYER_DIRECTION_RIGHT:
       spriteAddress += player.spriteFrame % 2 * SPRITE_COL_OFFSET + 32;
+      break;
+    case PLAYER_DIRECTION_RIGHT:
+      spriteAddress += ((player.spriteFrame % 2) + 2) * SPRITE_COL_OFFSET + 32;
       break;
   }
 
@@ -194,7 +195,7 @@ void drawPlayer() {
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
 
   if (player.flashFrame % 2 == 0) {
-    ardbitmap.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE, ALIGN_NONE, mirrorHorizontal ? MIRROR_HORIZONTAL : MIRROR_NONE); 
+    arduboy.drawBitmap(cam_x_offset, cam_y_offset, spriteAddress, 16, 16, WHITE); 
   }
 }
 

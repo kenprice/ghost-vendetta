@@ -32,7 +32,6 @@ void loop() {
   ((FunctionPointer) pgm_read_word (&mainGameLoop[gameState]))();
   arduboy.display();
 
-  game_frame++;
-  if (game_frame > 100) game_frame = 0;
+  gameFrame = (gameFrame + 1) % 100;
 }
 

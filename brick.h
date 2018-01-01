@@ -7,10 +7,10 @@
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
-  int lifetime;
-  byte x;
-  byte y;
-  bool active;
+  byte lifetime : 4;
+  byte x : 4;
+  byte y : 4;
+  bool active : 4;
 } DestroyedBrick;
 
 // globals ///////////////////////////////////////////////////////////////////

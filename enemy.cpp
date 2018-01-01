@@ -80,7 +80,7 @@ void drawEnemies() {
 
     // TODO: Account for different enemy sizes in the future
     int smallEnemyPadding = 4;
-    arduboy.drawBitmap(wx + smallEnemyPadding, wy + smallEnemyPadding, SPRITES_8 + SNAKE_SPRITE_OFFSET + ((game_frame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET), 8, 8, WHITE); 
+    arduboy.drawBitmap(wx + smallEnemyPadding, wy + smallEnemyPadding, SPRITES_8 + SNAKE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET), 8, 8, WHITE); 
   }
 }
 

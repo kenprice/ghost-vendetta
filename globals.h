@@ -33,12 +33,7 @@
 
 extern Arduboy2Base arduboy;
 extern byte gameState;
-extern unsigned char game_frame;
+extern byte gameFrame;
 extern ArduboyTones sound;
-
-// Ardbitmap /////////////////////////////////////////////////////////////////
-#define ARDBITMAP_SBUF arduboy.getBuffer()
-#include <ArdBitmap.h>
-extern ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 
 #endif

@@ -9,16 +9,16 @@
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
-  int lifetime;
-  byte x;
-  byte y;
-  byte blastRadius = 1;
-  bool active;
-  bool exploding;
-  byte blastNorth;
-  byte blastSouth;
-  byte blastEast;
-  byte blastWest;
+  byte lifetime : 4;
+  byte x : 4;
+  byte y : 4;
+  byte blastRadius : 2;
+  bool active : 1;
+  bool exploding : 1;
+  byte blastNorth : 2;
+  byte blastSouth : 2;
+  byte blastEast : 2;
+  byte blastWest : 2;
 } Bomb;
 
 // globals ///////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ extern int startBombs;
 
 // functions /////////////////////////////////////////////////////////////////
 void initializeBombs();
-void placeBomb(int x, int y);
+void placeBomb(byte x, byte y);
 void updateBombs();
 void drawBombs();
 

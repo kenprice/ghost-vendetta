@@ -13,12 +13,12 @@
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
-  byte id;
-  byte x;
-  byte y;
-  byte frame;
-  bool active;
-  bool opening;
+  byte id : 4;
+  byte x : 4;
+  byte y : 4;
+  byte frame : 4;
+  bool active : 1;
+  bool opening : 1;
 } TreasureChest;
 
 // globals ///////////////////////////////////////////////////////////////////
