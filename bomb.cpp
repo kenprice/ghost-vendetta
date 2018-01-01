@@ -5,6 +5,7 @@
 #include "level.h"
 #include "brick.h"
 #include "enemy.h"
+#include "obstacle.h"
 
 const uint16_t SOUND_BOMB_PLACE[] PROGMEM = { NOTE_A1, 100, TONES_END };
 const uint16_t SOUND_BOMB_EXPLODE[] PROGMEM = { NOTE_C1, 500, TONES_END };
@@ -15,7 +16,7 @@ void initializeBombs() {
   for (byte i = 0; i < MAX_BOMBS; i++) {
     bombs[i].active = false;
     bombs[i].exploding = false;
-    bombs[i].blastRadius = 1;
+    bombs[i].blastRadius = 2;
   }
 }
 
@@ -23,34 +24,42 @@ bool handleCollidePlayer(byte x, byte y) {
   if (playerCollidedWith(x, y)) {
     damagePlayer();
   }
-}   
+}
+
+/**
+ * Damage in-game objects, such as bricks, shrubs, and boulders
+ */
+bool damageObject(byte x, byte y) {
+  if (isBrick(x, y)) return destroyBrick(x, y);
+  if (getObstacleType(x, y)) {
+    damageObstacle(x, y);
+    return true;
+  }
+  return false;
+}
 
 void destroyBricks(Bomb& bomb) {
-  for (byte i = 1; i <= bomb.blastRadius + 1; i++) {
-    if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
+  for (byte i = 1; i <= bomb.blastRadius; i++) {
+    if (damageObject(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
       bomb.blastEast = i - 1;
       break;
     }
   }
-  for (byte i = 1; i <= bomb.blastRadius + 1; i++) {
-    if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
+  for (byte i = 1; i <= bomb.blastRadius; i++) {
+    if (damageObject(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
       bomb.blastWest = i - 1;
       break;
     }
   }
-  for (byte i = 1; i <= bomb.blastRadius + 1; i++) {
-    if (destroyBrick(bomb.x, bomb.y + i) || getTile(bomb.x, bomb.y + i) == WALL) {
+  for (byte i = 1; i <= bomb.blastRadius; i++) {
+    if (damageObject(bomb.x, bomb.y + i) || getTile(bomb.x, bomb.y + i) == WALL) {
       bomb.blastSouth = i - 1;
       break;
     }
   }
-  for (byte i = 1; i <= bomb.blastRadius + 1; i++) {
-    if (destroyBrick(bomb.x, bomb.y - i) || getTile(bomb.x, bomb.y - i) == WALL) {
+  for (byte i = 1; i <= bomb.blastRadius; i++) {
+    if (damageObject(bomb.x, bomb.y - i) || getTile(bomb.x, bomb.y - i) == WALL) {
       bomb.blastNorth = i - 1;
-      break;
-    }
-    if (destroyBrick(bomb.x, bomb.y - i)) {
-      bomb.blastNorth = i;
       break;
     }
   }
@@ -89,10 +98,10 @@ void placeBomb(byte x, byte y) {
   bombs[i].y = y;
   bombs[i].active = true;
   bombs[i].lifetime = 10;
-  bombs[i].blastNorth = bombs[i].blastRadius + 1;
-  bombs[i].blastSouth = bombs[i].blastRadius + 1;
-  bombs[i].blastEast = bombs[i].blastRadius + 1;
-  bombs[i].blastWest = bombs[i].blastRadius + 1;
+  bombs[i].blastNorth = bombs[i].blastRadius;
+  bombs[i].blastSouth = bombs[i].blastRadius;
+  bombs[i].blastEast = bombs[i].blastRadius;
+  bombs[i].blastWest = bombs[i].blastRadius;
   sound.tones(SOUND_BOMB_PLACE);
 }
 
