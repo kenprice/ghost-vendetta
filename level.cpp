@@ -4,7 +4,7 @@
 #include "player.h"
 #include "item.h"
 
-byte level = 0;
+byte level = 2;
 
 PROGMEM const byte blocks[][16] = {
   {
@@ -152,7 +152,7 @@ PROGMEM const byte itemSpawns[][15] = {
   },
 };
 
-byte getTile(unsigned int posX, unsigned int posY) {
+byte getTile(byte posX, byte posY) {
   return pgm_read_byte(
     &blocks[
       pgm_read_byte(&maps[level-1][posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM])

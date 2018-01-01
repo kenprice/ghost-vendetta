@@ -22,7 +22,7 @@ extern PROGMEM const byte maps[][MAP_DIM*MAP_DIM];
 extern PROGMEM const byte itemSpawns[][15];
 
 // functions /////////////////////////////////////////////////////////////////
-byte getTile(unsigned int posX, unsigned int posY);
+byte getTile(byte posX, byte posY);
 void drawLevel(byte posX, byte posY);
 
 #endif

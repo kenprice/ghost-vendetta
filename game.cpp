@@ -6,12 +6,14 @@
 #include "brick.h"
 #include "enemy.h"
 #include "item.h"
+#include "obstacle.h"
 
 void resetGameState() {
   initializePlayer();
   initializeBombs();
   generateBricks();
   spawnChests();
+  spawnObstacles();
 }
 
 void stateMainMenu() {
@@ -63,6 +65,7 @@ void stateGamePlaying() {
   drawEnemies();
   drawPlayer();
   drawChests(player.x, player.y);
+  drawObstacles(player.x, player.y);
 }
 
 void stateGameOver() {
