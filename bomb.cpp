@@ -15,7 +15,7 @@ void initializeBombs() {
   for (int i = 0; i < MAX_BOMBS; i++) {
     bombs[i].active = false;
     bombs[i].exploding = false;
-    bombs[i].blastRadius = 2;
+    bombs[i].blastRadius = 1;
   }
 }
 
@@ -38,25 +38,25 @@ bool handleCollidePlayer(int x, int y) {
 }   
 
 void destroyBricks(Bomb& bomb) {
-  for (int i = 1; i <= bomb.blastRadius; i++) {
+  for (int i = 1; i <= bomb.blastRadius + 1; i++) {
     if (destroyBrick(bomb.x + i, bomb.y) || getTile(bomb.x + i, bomb.y) == WALL) {
       bomb.blastEast = i - 1;
       break;
     }
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
+  for (int i = 1; i <= bomb.blastRadius + 1; i++) {
     if (destroyBrick(bomb.x - i, bomb.y) || getTile(bomb.x - i, bomb.y) == WALL) {
       bomb.blastWest = i - 1;
       break;
     }
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
+  for (int i = 1; i <= bomb.blastRadius + 1; i++) {
     if (destroyBrick(bomb.x, bomb.y + i) || getTile(bomb.x, bomb.y + i) == WALL) {
       bomb.blastSouth = i - 1;
       break;
     }
   }
-  for (int i = 1; i <= bomb.blastRadius; i++) {
+  for (int i = 1; i <= bomb.blastRadius + 1; i++) {
     if (destroyBrick(bomb.x, bomb.y - i) || getTile(bomb.x, bomb.y - i) == WALL) {
       bomb.blastNorth = i - 1;
       break;
@@ -100,18 +100,18 @@ void placeBomb(int x, int y) {
   bombs[i].x = x;
   bombs[i].y = y;
   bombs[i].active = true;
-  bombs[i].lifetime = 200;
-  bombs[i].blastNorth = bombs[i].blastRadius;
-  bombs[i].blastSouth = bombs[i].blastRadius;
-  bombs[i].blastEast = bombs[i].blastRadius;
-  bombs[i].blastWest = bombs[i].blastRadius;
+  bombs[i].lifetime = 10;
+  bombs[i].blastNorth = bombs[i].blastRadius + 1;
+  bombs[i].blastSouth = bombs[i].blastRadius + 1;
+  bombs[i].blastEast = bombs[i].blastRadius + 1;
+  bombs[i].blastWest = bombs[i].blastRadius + 1;
   sound.tones(SOUND_BOMB_PLACE);
 }
 
 void updateBomb(Bomb& bomb) {
-  bomb.lifetime--;
+  if (arduboy.everyXFrames(20)) bomb.lifetime--;
   if (!bomb.exploding && bomb.lifetime <= 0) {
-    bomb.lifetime = 20;
+    bomb.lifetime = 1;
     bomb.exploding = true;
     destroyBricks(bomb);
     sound.tones(SOUND_BOMB_EXPLODE);
