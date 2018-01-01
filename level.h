@@ -20,6 +20,7 @@ extern byte level;
 extern PROGMEM const byte blocks[][16];
 extern PROGMEM const byte maps[][MAP_DIM*MAP_DIM];
 extern PROGMEM const byte itemSpawns[][15];
+extern PROGMEM const byte playerStartPosition[][3];
 extern PROGMEM const byte brickDensity[];
 
 // functions /////////////////////////////////////////////////////////////////

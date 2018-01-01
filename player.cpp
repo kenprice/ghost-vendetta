@@ -35,7 +35,9 @@ void startPlayerAtLevel() {
   player.cooldown = 0;
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.spriteFrame = 0;
-  player.direction = PLAYER_DIRECTION_RIGHT;
+  player.x = pgm_read_byte(&playerStartPosition[level-1][0]);
+  player.y = pgm_read_byte(&playerStartPosition[level-1][1]);
+  player.direction = pgm_read_byte(&playerStartPosition[level-1][2]);
 }
 
 bool isSolid(int x, int y) {

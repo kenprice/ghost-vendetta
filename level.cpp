@@ -167,7 +167,7 @@ PROGMEM const byte blocks[][16] = {
     0x0A, 0x0A, 0x0A, 0x0A,   // 0x1A  # # # #
     0x0A, 0x00, 0x00, 0x00,   //       #
     0x0A, 0x00, 0x00, 0x00,   //       #
-    0x0A, 0x00, 0x00, 0x00   //       #
+    0x0A, 0x00, 0x00, 0x00    //       #
   },
   {
     0x0A, 0x0A, 0x0A, 0x0A,   // 0x1B  # # # #
@@ -247,6 +247,14 @@ PROGMEM const byte itemSpawns[][15] = {
     0, 0, 0,
     0, 0, 0
   },
+};
+
+PROGMEM const byte playerStartPosition[][3] = {
+  // Format: <player.x>, <player.y>, <player.direction>
+  {16,  16,  PLAYER_DIRECTION_RIGHT},
+  {16,  16,  PLAYER_DIRECTION_RIGHT},
+  {16,  16,  PLAYER_DIRECTION_DOWN},
+  {16,  240, PLAYER_DIRECTION_UP}
 };
 
 PROGMEM const byte brickDensity[] = {4, 4, 5, 6};
