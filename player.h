@@ -1,6 +1,8 @@
 #ifndef _PLAYER
 #define _PLAYER
 
+#include "globals.h"
+
 // constants /////////////////////////////////////////////////////////////////
 #define PLAYER_MAX_SPEED   10   // Number of frames it takes for player to move
 #define COLLISION_PADDING  5
@@ -16,16 +18,15 @@
 enum alive_state { ALIVE, DYING };
 
 typedef struct {
-  int HACK_UNUSED_PADDING;      // Temporarily mitigate inexplicable memory corruption bug
-  int x;
-  int y;
-  unsigned char cooldown;
-  unsigned char cooldownCounter;
-  unsigned char health;
-  unsigned char flashFrame;     // How many frames to lose flash (temp invincibility)
-  unsigned direction;
-  unsigned char frame;          // General frame
-  unsigned char spriteFrame;    // Animation frame
+  byte x;
+  byte y;
+  byte cooldown;
+  byte cooldownCounter;
+  byte health;
+  byte flashFrame;     // How many frames to lose flash (temp invincibility)
+  byte direction;
+  byte frame;          // General frame
+  byte spriteFrame;    // Animation frame
   enum alive_state state;
 } Player;
 
@@ -39,6 +40,6 @@ void drawPlayer();
 void movePlayer(int dx, int dy);
 bool playerCollidedWith(int bx, int by);
 void damagePlayer();
-void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy, bool recursed);
+void mapCollide(byte& x, byte& y, bool horizontal, char& vx, char& vy, bool recursed);
 
 #endif

@@ -19,7 +19,7 @@ void initializePlayer() {
   player.state = ALIVE;
   player.cooldown = 100;
   player.cooldownCounter = 0;
-  player.health = 1;
+  player.health = 10;
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
@@ -30,7 +30,7 @@ bool isSolid(int x, int y) {
   return getTile(x, y) == WALL || isBrick(x, y);
 }
 
-void horizontalCollide(int& x, int& y, char& vx, char& vy, int i) {
+void horizontalCollide(byte& x, byte& y, char& vx, char& vy, int i) {
   if (vx < 0) {
     x = (i + 1) * 16;
     if (!isSolid(x/16 - 1, y / 16) && !isSolid(x/16, y / 16) && vy == 0 && (y % 16) <= COLLISION_PADDING) {
@@ -54,7 +54,7 @@ void horizontalCollide(int& x, int& y, char& vx, char& vy, int i) {
   }
 }
 
-void verticalCollide(int& x, int& y, char& vx, char& vy, int j) {
+void verticalCollide(byte& x, byte& y, char& vx, char& vy, int j) {
   if (vy < 0) {
     y = (j + 1) * 16;
     if (!isSolid(x / 16, y / 16 - 1) && !isSolid(x / 16, y / 16) && vx == 0 && (x % 16) <= COLLISION_PADDING) {
@@ -78,7 +78,7 @@ void verticalCollide(int& x, int& y, char& vx, char& vy, int j) {
   }
 }
 
-void mapCollide(int& x, int& y, bool horizontal, char& vx, char& vy, bool recursed) {
+void mapCollide(byte& x, byte& y, bool horizontal, char& vx, char& vy, bool recursed) {
   byte tileXMax = x % 16 != 0;
   byte tileYMax = y % 16 != 0;
   for (int i = x / 16; i <= x / 16 + tileXMax; i++) {
