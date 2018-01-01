@@ -19,10 +19,11 @@ extern DestroyedBrick destroyedBricks[MAX_DESTROYED_BRICKS];
 
 // functions /////////////////////////////////////////////////////////////////
 void generateBricks();
-bool isBrick(unsigned int posX, unsigned int posY);
+bool isBrick(byte x, byte y);
 void updateBricks();
-void setBrick(unsigned int posX, unsigned int posY, bool placeBrick);
+void setBrick(byte x, byte y, bool placeBrick);
 void drawBricks(int posX, int posY);
+bool destroyBrick(byte x, byte y);
 void addDestroyedBrick(byte x, byte ysY);
 bool isDestroyedBrick(byte x, byte y);
 #endif

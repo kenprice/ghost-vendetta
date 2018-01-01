@@ -12,15 +12,15 @@ void clearBricks() {
   }
 }
 
-void setBrick(unsigned int posX, unsigned int posY, bool placeBrick) {
-  int i = posX + (posY * BOARD_DIM);
-  if (placeBrick) bricks[i/8] |= (B10000000 >> (posX % 8));
-  else bricks[i/8] &= ~(B10000000 >> (posX % 8));
+void setBrick(byte x, byte y, boolean placeBrick) {
+  int i = x + (y * BOARD_DIM);
+  if (placeBrick) bricks[i/8] |= (B10000000 >> (x % 8));
+  else bricks[i/8] &= ~(B10000000 >> (x % 8));
 }
 
-bool isBrick(unsigned int posX, unsigned int posY) {
-  int i = posX + (posY * BOARD_DIM);
-  return (bricks[i/8] & (B10000000 >> (posX % 8))) > 0;
+bool isBrick(byte x, byte y) {
+  int i = x + (y * BOARD_DIM);
+  return (bricks[i/8] & (B10000000 >> (x % 8))) > 0;
 }
 
 void generateBricks() {
@@ -60,6 +60,18 @@ void drawBricks(int posX, int posY) {
       }
     }
   }
+}
+
+/**
+   Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
+*/
+bool destroyBrick(byte x, byte y) {
+  if (isBrick(x, y)) {
+    setBrick(x, y, false);
+    addDestroyedBrick(x, y);
+    return true;
+  }
+  return false;
 }
 
 void addDestroyedBrick(byte x, byte y) {

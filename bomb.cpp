@@ -19,18 +19,6 @@ void initializeBombs() {
   }
 }
 
-/**
-   Attempt to destroy brick at tile coordinates, returns true if brick destroyed.
-*/
-bool destroyBrick(byte x, byte y) {
-  if (isBrick(x, y)) {
-    setBrick(x, y, false);
-    addDestroyedBrick(x, y);
-    return true;
-  }
-  return false;
-}
-
 bool handleCollidePlayer(byte x, byte y) {
   if (playerCollidedWith(x, y)) {
     damagePlayer();
