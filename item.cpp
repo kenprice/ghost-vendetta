@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "player.h"
 #include "collision.h"
+#include "brick.h"
 
 const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {NOTE_C7, 25, NOTE_A7, 25, NOTE_C7, 25, TONES_END};
 
@@ -30,6 +31,8 @@ void spawnChests() {
     treasureChests[i].x = x;
     treasureChests[i].y = y;
     treasureChests[i].active = true;
+
+    if (isBrick(x, y)) setBrick(x, y, false);
   }
 }
 
