@@ -5,6 +5,7 @@
 #include "bitmap.h"
 #include "globals.h"
 #include "collision.h"
+#include "obstacle.h"
 
 Enemy enemies[MAX_ENEMIES];
 
@@ -70,13 +71,10 @@ bool spawnEnemy() {
 }
 
 void drawEnemies() {
-  int cam_x_offset = 128/2-8;
-  int cam_y_offset = 64/2-8;
-
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
-    int wx = enemies[i].x + cam_x_offset - player.x;
-    int wy = enemies[i].y + cam_y_offset - player.y;
+    int wx = enemies[i].x + CAM_X_OFFSET - player.x;
+    int wy = enemies[i].y + CAM_Y_OFFSET - player.y;
 
     // TODO: Account for different enemy sizes in the future
     int smallEnemyPadding = 4;
@@ -90,14 +88,15 @@ void drawEnemies() {
 bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
   int x = enemy.x;
   int y = enemy.y;
-  int start_x = enemy.x / 16 - 1 < 0 ? 0 : enemy.x / 16 - 1;
-  int start_y = enemy.y / 16 - 1 < 0 ? 0 : enemy.y / 16 - 1;
-  int end_x = enemy.x / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : enemy.x / 16 + 1;
-  int end_y = enemy.y / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : enemy.y / 16 + 1;
+  int startX = enemy.x / 16 - 1 < 0 ? 0 : enemy.x / 16 - 1;
+  int startY = enemy.y / 16 - 1 < 0 ? 0 : enemy.y / 16 - 1;
+  int endX = enemy.x / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : enemy.x / 16 + 1;
+  int endY = enemy.y / 16 + 1 > BOARD_DIM - 1 ? BOARD_DIM - 1 : enemy.y / 16 + 1;
 
-  for (int i = start_x; i <= end_x; i++) {
-    for (int j = start_y; j <= end_y; j++) {
-      if (collidedWith(enemy.x, enemy.y, i * 16, j * 16, 3) && (getTile(i, j) == WALL || isBrick(i, j))) {
+  for (byte i = startX; i <= endX; i++) {
+    for (byte j = startY; j <= endY; j++) {
+      bool isSnakeAndBoulder = getObstacleType(i, j) == OBS_BOULDER && enemy.id == ENEMY_SNAKE;
+      if (collidedWith(enemy.x, enemy.y, i * 16, j * 16, 3) && (getTile(i, j) == WALL || isBrick(i, j) || isSnakeAndBoulder)) {
         return true;
       }
       if (collidedWith(enemy.x, enemy.y, player.x, player.y, 3)) {
