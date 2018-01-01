@@ -170,7 +170,7 @@ void updatePlayer() {
 }
 
 void drawPlayer() {
-  player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : game_frame % 4;
+  player.spriteFrame = player.state == ALIVE ? player.frame / 20 % 4 : gameFrame % 4;
 
   int cam_x_offset = 128/2-8;
   int cam_y_offset = 64/2-8;

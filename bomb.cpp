@@ -139,7 +139,7 @@ void updateBombs() {
  */
 void drawBombBlast(int wx, int wy, byte x, byte y) {
   if (isDestroyedBrick(x, y)) return;
-  arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (game_frame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+  arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (gameFrame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
 }
 
 void drawBomb(Bomb bomb) {
@@ -149,7 +149,7 @@ void drawBomb(Bomb bomb) {
   int wy = bomb.y * 16 + cam_y_offset - player.y;
 
   if (bomb.exploding) {
-    arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (game_frame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+    arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (gameFrame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
     for (int i = 1; i <= bomb.blastEast; i++)  drawBombBlast(wx + (i * 16), wy, bomb.x + i, bomb.y);
     for (int i = 1; i <= bomb.blastWest; i++)  drawBombBlast(wx - (i * 16), wy, bomb.x - i, bomb.y);
     for (int i = 1; i <= bomb.blastNorth; i++) drawBombBlast(wx, wy - (i * 16), bomb.x, bomb.y - i);
