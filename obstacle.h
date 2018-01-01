@@ -12,7 +12,7 @@
  *********************************************************************************/
 
 // constants /////////////////////////////////////////////////////////////////
-#define MAX_OBSTACLES 32
+#define MAX_OBSTACLES 20
 #define OBS_SHRUB     1
 #define OBS_BOULDER   2
 
@@ -25,7 +25,8 @@ typedef struct {
   byte id : 4;
   byte x : 4;
   byte y : 4;
-  byte state : 4;
+  byte state : 2;
+  byte spriteFrame : 2;     // Sprite frame for animations
 } Obstacle;
 
 // globals ///////////////////////////////////////////////////////////////////
@@ -33,7 +34,9 @@ extern Obstacle obstacles[MAX_OBSTACLES];
 
 // functions /////////////////////////////////////////////////////////////////
 void spawnObstacles();
+void updateObstacles();
 void drawObstacles(int posX, int posY);
-byte getObstacle(byte x, byte y);
+byte getObstacleType(byte x, byte y);
+void damageObstacle(byte x, byte y);
 
 #endif

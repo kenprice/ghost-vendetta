@@ -31,10 +31,15 @@ bool handleCollidePlayer(byte x, byte y) {
  */
 bool damageObject(byte x, byte y) {
   if (isBrick(x, y)) return destroyBrick(x, y);
-  if (getObstacleType(x, y)) {
+  byte obstacleType = getObstacleType(x, y);
+  if (obstacleType) {
     damageObstacle(x, y);
-    return true;
   }
+  switch (obstacleType) {
+    case OBS_SHRUB:   return false;
+    case OBS_BOULDER: return true;
+  }
+  
   return false;
 }
 

@@ -37,6 +37,22 @@ void spawnObstacles() {
   }
 }
 
+void updateObstacle(Obstacle& obstacle) {
+  if (arduboy.everyXFrames(10) && obstacle.spriteFrame > 0) {
+    obstacle.spriteFrame--;
+  }
+  if (obstacle.state == OBS_STATE_DESTROYED && obstacle.spriteFrame == 0) {
+    obstacle.id = NULL;
+  }
+}
+
+void updateObstacles() {
+  for (byte i = 0; i < MAX_OBSTACLES; i++) {
+    if (!obstacles[i].id) continue;
+    updateObstacle(obstacles[i]);
+  }
+}
+
 void drawObstacles(int posX, int posY) {
   for (byte i = 0; i < MAX_OBSTACLES; i++) {
     if (!obstacles[i].id) continue;
@@ -45,19 +61,37 @@ void drawObstacles(int posX, int posY) {
   
     switch (obstacles[i].id) {
       case OBS_BOULDER:
-        arduboy.drawBitmap(wx, wy, SPRITES + BOULDER_SPRITE_OFFSET, 16, 16, WHITE);
+        arduboy.drawBitmap(wx, wy, SPRITES + BOULDER_SPRITE_OFFSET + (obstacles[i].state * SPRITE_COL_OFFSET), 16, 16, WHITE);
         break;
       case OBS_SHRUB:
-        arduboy.drawBitmap(wx, wy, SPRITES + SHRUB_SPRITE_OFFSET, 16, 16, WHITE);
+        arduboy.drawBitmap(wx, wy, SPRITES + SHRUB_SPRITE_OFFSET + (obstacles[i].state * SPRITE_COL_OFFSET), 16, 16, WHITE);
         break;
     }
   }
 }
 
-byte getObstacle(byte x, byte y) {
+byte getObstacleType(byte x, byte y) {
   for (byte i = 0; i < MAX_OBSTACLES; i++) {
     if (!obstacles[i].id) continue;
     if (obstacles[i].x == x && obstacles[i].y == y) return obstacles[i].id;
+  }
+  return NULL;
+}
+
+void damageObstacle(byte x, byte y) {
+  for (byte i = 0; i < MAX_OBSTACLES; i++) {
+    if (!obstacles[i].id || (obstacles[i].x != x || obstacles[i].y != y)) continue;
+    if (obstacles[i].id == OBS_SHRUB && obstacles[i].state == OBS_STATE_UNDAMAGED) {
+      obstacles[i].state = OBS_STATE_DESTROYED;
+      obstacles[i].spriteFrame = 3;
+    }
+    if (obstacles[i].id == OBS_BOULDER && obstacles[i].state == OBS_STATE_DAMAGED) {
+      obstacles[i].state = OBS_STATE_DESTROYED;
+      obstacles[i].spriteFrame = 3;
+    }
+    if (obstacles[i].id == OBS_BOULDER && obstacles[i].state == OBS_STATE_UNDAMAGED) {
+      obstacles[i].state = OBS_STATE_DAMAGED;
+    }
   }
   return NULL;
 }

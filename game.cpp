@@ -49,6 +49,7 @@ void stateGamePlaying() {
   updateEnemies();
   updateBricks();
   updateChests();
+  updateObstacles();
 
   // Check win condition
   bool enemyAlive = false;

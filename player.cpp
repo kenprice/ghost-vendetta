@@ -27,7 +27,8 @@ void initializePlayer() {
 
 bool isSolid(int x, int y) {
   // Tile coordinates
-  return getTile(x, y) == WALL || isBrick(x, y) || getObstacle(x, y) == OBS_SHRUB || getObstacle(x, y) == OBS_BOULDER;
+  byte obstacleType = getObstacleType(x, y);
+  return getTile(x, y) == WALL || isBrick(x, y) || obstacleType == OBS_SHRUB || obstacleType == OBS_BOULDER;
 }
 
 void horizontalCollide(byte& x, byte& y, char& vx, char& vy, int i) {
