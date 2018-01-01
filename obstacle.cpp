@@ -64,7 +64,7 @@ void drawObstacles(int posX, int posY) {
         arduboy.drawBitmap(wx, wy, SPRITES + BOULDER_SPRITE_OFFSET + (obstacles[i].state * SPRITE_COL_OFFSET), 16, 16, WHITE);
         break;
       case OBS_SHRUB:
-        arduboy.drawBitmap(wx, wy, SPRITES + SHRUB_SPRITE_OFFSET + (obstacles[i].state * SPRITE_COL_OFFSET), 16, 16, WHITE);
+        arduboy.drawBitmap(wx, wy, SPRITES + SHRUB_SPRITE_OFFSET + (obstacles[i].state == OBS_STATE_DESTROYED ? SPRITE_COL_OFFSET : 0), 16, 16, WHITE);
         break;
     }
   }

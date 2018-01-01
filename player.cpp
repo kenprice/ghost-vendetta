@@ -146,14 +146,14 @@ void handlePlayerMove() {
     byte fy = (player.y+8)/16;
     if (player.cooldown == 0) {
       placeBomb(fx, fy);
-      player.cooldown = 1;
+      player.cooldown = 15;
     }
   }
 }
 
 void updatePlayer() {
-  if (player.cooldown == 1 && arduboy.everyXFrames(100)) {
-    player.cooldown = 0;
+  if (player.cooldown > 0 && arduboy.everyXFrames(5)) {
+    player.cooldown--;
   }
 
   if (player.flashFrame > 0 && arduboy.everyXFrames(5)) {

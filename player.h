@@ -21,7 +21,7 @@
 typedef struct {
   byte x;
   byte y;
-  bool cooldown : 1;
+  byte cooldown : 4;
   byte health;
   byte flashFrame;     // How many frames to lose flash (temp invincibility)
   byte direction;
