@@ -15,12 +15,12 @@
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
-  byte id;
-  int x;
-  int y;
-  byte direction;
-  byte state;
-  bool active;
+  byte id : 2;
+  byte direction : 2;
+  byte state : 2;
+  bool active : 2;
+  byte x;
+  byte y;
 } Enemy;
 
 // globals ///////////////////////////////////////////////////////////////////
