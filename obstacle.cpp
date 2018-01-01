@@ -6,7 +6,7 @@
 Obstacle obstacles[MAX_OBSTACLES];
 
 void clearObstacles() {
-  for (int i = 0; i < MAX_OBSTACLES; i++) {
+  for (byte i = 0; i < MAX_OBSTACLES; i++) {
     obstacles[i].id = NULL;
     obstacles[i].state = OBS_STATE_UNDAMAGED;
   }
@@ -17,7 +17,6 @@ void spawnObstacles() {
 
   for (byte i = 0; i < BOARD_DIM; i++) {
     for (byte j= 0; j < BOARD_DIM; j++) {
-      
       byte tile = getTile(i, j);
       byte obstacleType = NULL;
       if (tile == BOULDER_SPAWN) obstacleType = OBS_BOULDER;
@@ -39,10 +38,10 @@ void spawnObstacles() {
 }
 
 void drawObstacles(int posX, int posY) {
-  for (int i = 0; i < MAX_OBSTACLES; i++) {
+  for (byte i = 0; i < MAX_OBSTACLES; i++) {
     if (!obstacles[i].id) continue;
-    int wx = obstacles[i].x * 16 + CAM_X_OFFSET - posX;
-    int wy = obstacles[i].y * 16 + CAM_Y_OFFSET - posY;
+    char wx = obstacles[i].x * 16 + CAM_X_OFFSET - posX;
+    char wy = obstacles[i].y * 16 + CAM_Y_OFFSET - posY;
   
     switch (obstacles[i].id) {
       case OBS_BOULDER:
@@ -53,5 +52,13 @@ void drawObstacles(int posX, int posY) {
         break;
     }
   }
+}
+
+byte getObstacle(byte x, byte y) {
+  for (byte i = 0; i < MAX_OBSTACLES; i++) {
+    if (!obstacles[i].id) continue;
+    if (obstacles[i].x == x && obstacles[i].y == y) return obstacles[i].id;
+  }
+  return NULL;
 }
 

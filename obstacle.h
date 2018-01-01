@@ -6,6 +6,9 @@
 /*********************************************************************************
  * Obstacles
  * Special objects that aren't bricks. Can be destructable.
+ * 
+ * Shrubs - Snakes can walk through it. Bombs blasts can go through it. Character cannot.
+ * Boulder - Solid, like brick. But can take two hits before destroyed.
  *********************************************************************************/
 
 // constants /////////////////////////////////////////////////////////////////
@@ -31,5 +34,6 @@ extern Obstacle obstacles[MAX_OBSTACLES];
 // functions /////////////////////////////////////////////////////////////////
 void spawnObstacles();
 void drawObstacles(int posX, int posY);
+byte getObstacle(byte x, byte y);
 
 #endif

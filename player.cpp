@@ -4,6 +4,7 @@
 #include "bomb.h"
 #include "brick.h"
 #include "bitmap.h"
+#include "obstacle.h"
 
 const uint16_t SOUND_PLAYER_HURT[] PROGMEM = {
   NOTE_A7, 25, NOTE_REST, 25, NOTE_A7, 25, NOTE_REST, 25,
@@ -26,7 +27,7 @@ void initializePlayer() {
 
 bool isSolid(int x, int y) {
   // Tile coordinates
-  return getTile(x, y) == WALL || isBrick(x, y);
+  return getTile(x, y) == WALL || isBrick(x, y) || getObstacle(x, y) == OBS_SHRUB || getObstacle(x, y) == OBS_BOULDER;
 }
 
 void horizontalCollide(byte& x, byte& y, char& vx, char& vy, int i) {
@@ -82,7 +83,7 @@ void mapCollide(byte& x, byte& y, bool horizontal, char& vx, char& vy, bool recu
   byte tileYMax = y % 16 != 0;
   for (int i = x / 16; i <= x / 16 + tileXMax; i++) {
     for (int j = y / 16; j <= y / 16 + tileYMax; j++) {
-      if (getTile(i, j) != WALL && !isBrick(i, j)) continue;
+      if (!isSolid(i, j)) continue;
       if (horizontal && !recursed) {
         horizontalCollide(x, y, vx, vy, i);
       } else if (!recursed) {
