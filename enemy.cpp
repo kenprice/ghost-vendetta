@@ -12,7 +12,8 @@ Enemy enemies[MAX_ENEMIES];
 typedef void (*FunctionPointer) (Enemy& enemy);
 const FunctionPointer PROGMEM enemyUpdates[] =
 {
-  updateSnake
+  updateSnake,
+  updateHardSnake
 };
 
 void clearEnemies() {
@@ -22,20 +23,21 @@ void clearEnemies() {
   }
 }
 
-void setEnemy(Enemy& enemy, byte x, byte y) {
+void setEnemy(Enemy& enemy, byte x, byte y, byte id) {
   enemy.x = x;
   enemy.y = y;
   enemy.active = true;
   enemy.state = ENEMY_STATE_STOPPED;
+  enemy.id = id;
 }
 
 /**
  * Add new enemy at tile coordinates
  */
-bool addEnemy(byte x, byte y) { 
+bool addEnemy(byte x, byte y, byte id) { 
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (enemies[i].active) continue;
-    setEnemy(enemies[i], x * 16, y * 16);
+    setEnemy(enemies[i], x * 16, y * 16, id);
     return true;
   }
 
@@ -54,7 +56,9 @@ void killEnemiesAt(byte x, byte y) {
   }
 }
 
-bool spawnEnemy() {
+bool spawnEnemy(byte id) {
+  if (id == NULL) return true;
+
   byte x;
   byte y;
   byte tile;
@@ -67,7 +71,15 @@ bool spawnEnemy() {
     nearPlayer = x <= player.x / 16 + 1 && x >= player.x / 16 - 1 && y <= player.y / 16 + 1 && y >= player.y / 16 - 1;
   } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || nearPlayer);
 
-  return addEnemy(x, y);
+  return addEnemy(x, y, id);
+}
+
+void spawnEnemies() {
+  clearEnemies();
+  for (int i = 0; i < MAX_ENEMIES; i++) {
+    //Serial.println(pgm_read_byte(&enemySpawns[level-1][i]));
+    spawnEnemy(pgm_read_byte(&enemySpawns[level-1][i]));
+  }
 }
 
 void drawEnemies() {
@@ -78,7 +90,12 @@ void drawEnemies() {
 
     // TODO: Account for different enemy sizes in the future
     int smallEnemyPadding = 4;
-    arduboy.drawBitmap(wx + smallEnemyPadding, wy + smallEnemyPadding, SPRITES_8 + SNAKE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET), 8, 8, WHITE); 
+    switch (enemies[i].id) {
+      case ENEMY_HARD_SNAKE:
+      case ENEMY_SNAKE:
+        arduboy.drawBitmap(wx + smallEnemyPadding, wy + smallEnemyPadding, SPRITES_8 + SNAKE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET), 8, 8, WHITE);
+        break;
+    }
   }
 }
 
@@ -107,7 +124,7 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
   return false;
 }
 
-void updateSnake(Enemy& enemy) {
+void updateSnakeBase(Enemy& enemy) {
   if (enemy.state == ENEMY_STATE_MOVING) {
     int dx = 0;
     int dy = 0;
@@ -126,21 +143,55 @@ void updateSnake(Enemy& enemy) {
       return;
     }
 
-    if (enemy.x % 16 == 0 && enemy.y % 16 == 0) {
+    if ((enemy.x + 4) % 16 == 0 || (enemy.y + 4) % 16 == 0) {
       enemy.state = ENEMY_STATE_STOPPED;
     }
   }
-  if (enemy.state == ENEMY_STATE_STOPPED) {
+}
+
+void updateSnake(Enemy& enemy) {
+  if (!arduboy.everyXFrames(10)) return;
+  updateSnakeBase(enemy);
+  if (enemy.state != ENEMY_STATE_STOPPED) return;
+  enemy.direction = random(4);
+  enemy.state = ENEMY_STATE_MOVING;
+}
+
+void updateHardSnake(Enemy& enemy) {
+  if (!arduboy.everyXFrames(5)) return;
+  updateSnakeBase(enemy);
+  if (enemy.state != ENEMY_STATE_STOPPED) return;
+  char dx = (player.x / 16) - (enemy.x / 16);
+  char dy = (player.y / 16) - (enemy.y / 16);
+
+  enemy.state = ENEMY_STATE_MOVING;
+
+  if (dx > 0) {
+    enemy.direction = ENEMY_FACING_EAST;
+  }
+  if (dx < 0) {
+    enemy.direction = ENEMY_FACING_WEST;
+  }
+  if (dx != 0 && enemyCheckCollision(enemy, enemy.x + dx, enemy.y)) {
     enemy.direction = random(4);
-    enemy.state = ENEMY_STATE_MOVING;
+    return;
+  }
+  
+  if (dy > 0) {
+    enemy.direction = ENEMY_FACING_SOUTH;
+  }
+  if (dy < 0) {
+    enemy.direction = ENEMY_FACING_NORTH;
+  }
+  if (dy != 0 && enemyCheckCollision(enemy, enemy.x, enemy.y + dy)) {
+    enemy.direction = random(4);
   }
 }
 
 void updateEnemies() {
-  if (!arduboy.everyXFrames(10)) return;
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    if (!enemies[i].active) continue;
-    ((FunctionPointer) pgm_read_word (&enemyUpdates[enemies[i].id]))(enemies[i]);
+    if (!enemies[i].active || enemies[i].id < 1) continue;
+    ((FunctionPointer) pgm_read_word (&enemyUpdates[enemies[i].id-1]))(enemies[i]);
   }
 }
 

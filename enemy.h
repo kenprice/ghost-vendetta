@@ -9,9 +9,10 @@
 #define ENEMY_STATE_STOPPED   0
 #define ENEMY_STATE_MOVING    1
 
-#define MAX_ENEMIES           5
+#define MAX_ENEMIES           7
 
-#define ENEMY_SNAKE           0x00
+#define ENEMY_SNAKE           0x01
+#define ENEMY_HARD_SNAKE      0x02
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
@@ -30,8 +31,9 @@ extern Enemy enemies[MAX_ENEMIES];
 void clearEnemies();
 bool addEnemy(byte x, byte y);
 void killEnemiesAt(byte x, byte y);
-bool spawnEnemy();
+void spawnEnemies();
 void drawEnemies();
 void updateEnemies();
 void updateSnake(Enemy& enemy);
+void updateHardSnake(Enemy& enemy);
 

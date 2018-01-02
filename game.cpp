@@ -30,11 +30,8 @@ void stateMainMenu() {
 
 void stateGamePrepareLevel() {
   resetGameState();
+  spawnEnemies();
 
-  clearEnemies();
-  for (int i = 0; i < level + 3; i++) {
-    spawnEnemy();
-  }
   gameState = STATE_GAME_PLAYING;
 }
 

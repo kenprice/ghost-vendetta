@@ -259,6 +259,15 @@ PROGMEM const byte playerStartPosition[][3] = {
 
 PROGMEM const byte brickDensity[] = {4, 4, 5, 6};
 
+// Enemies that spawn at random locations in each level
+PROGMEM const byte enemySpawns[][7] = {
+  {0x01, 0x01, 0x01, 0x01, NULL, NULL, NULL},
+  {0x01, 0x01, 0x01, 0x01, 0x02, NULL, NULL},
+  {0x01, 0x01, 0x02, 0x02, 0x02, NULL, NULL},
+  {0x02, 0x02, 0x02, 0x02, 0x02, NULL, NULL},
+  {0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02}
+};
+
 byte getTile(byte posX, byte posY) {
   return pgm_read_byte(
     &blocks[
