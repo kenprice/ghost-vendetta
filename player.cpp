@@ -5,6 +5,7 @@
 #include "brick.h"
 #include "bitmap.h"
 #include "obstacle.h"
+#include "collision.h"
 
 const uint16_t SOUND_PLAYER_HURT[] PROGMEM = {
   NOTE_A7, 25, NOTE_REST, 25, NOTE_A7, 25, NOTE_REST, 25,
@@ -224,8 +225,8 @@ void drawPlayer() {
 /**
  * Returns true if player overlaps with board coordinates at (x, y)
  */
-bool playerCollidedWith(int bx, int by) {
-  return player.x < bx * 16 + 16 && player.x + 16 > bx * 16 && player.y < by * 16 + 16 && player.y + 16 > by * 16;
+bool playerCollidedWith(int bx, int by, int padding) {
+  return collidedWith(player.x, player.y, bx, by, padding);
 }
 
 void damagePlayer() {

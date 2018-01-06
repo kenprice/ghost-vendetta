@@ -40,7 +40,7 @@ void startPlayerAtLevel();
 void updatePlayer();
 void drawPlayer();
 void movePlayer(int dx, int dy);
-bool playerCollidedWith(int bx, int by);
+bool playerCollidedWith(int bx, int by, int padding);
 void damagePlayer();
 void mapCollide(byte& x, byte& y, bool horizontal, char& vx, char& vy, bool recursed);
 

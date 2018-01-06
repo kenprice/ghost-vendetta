@@ -21,7 +21,7 @@ void initializeBombs() {
 }
 
 bool handleCollidePlayer(byte x, byte y) {
-  if (playerCollidedWith(x, y)) {
+  if (playerCollidedWith(x*16, y*16, 4)) {
     damagePlayer();
   }
 }
