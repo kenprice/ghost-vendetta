@@ -38,6 +38,13 @@ void startPlayerAtLevel() {
   player.x = pgm_read_byte(&playerStartPosition[level-1][0]);
   player.y = pgm_read_byte(&playerStartPosition[level-1][1]);
   player.direction = pgm_read_byte(&playerStartPosition[level-1][2]);
+
+  // Remove bricks around player
+  setBrick(player.x / 16, player.y / 16, false);
+  setBrick(player.x / 16 - 1, player.y / 16, false);
+  setBrick(player.x / 16 + 1, player.y / 16, false);
+  setBrick(player.x / 16, player.y / 16 - 1, false);
+  setBrick(player.x / 16, player.y / 16 + 1, false);
 }
 
 bool isSolid(int x, int y) {

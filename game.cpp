@@ -9,11 +9,11 @@
 #include "obstacle.h"
 
 void resetGameState() {
-  startPlayerAtLevel();
   initializeBombs();
   generateBricks();
   spawnChests();
   spawnObstacles();
+  startPlayerAtLevel();
 }
 
 void stateMainMenu() {

@@ -254,7 +254,7 @@ PROGMEM const byte playerStartPosition[][3] = {
   {16,  16,  PLAYER_DIRECTION_RIGHT},
   {16,  16,  PLAYER_DIRECTION_RIGHT},
   {16,  16,  PLAYER_DIRECTION_DOWN},
-  {16,  240, PLAYER_DIRECTION_UP}
+  {16,  224, PLAYER_DIRECTION_UP}
 };
 
 PROGMEM const byte brickDensity[] = {4, 4, 5, 6};
