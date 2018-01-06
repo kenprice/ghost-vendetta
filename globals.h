@@ -46,4 +46,9 @@ extern Camera camera;
 // functions /////////////////////////////////////////////////////////////////
 short burp(short start, short goal, unsigned char step);
 
+// Ardbitmap /////////////////////////////////////////////////////////////////
+#define ARDBITMAP_SBUF arduboy.getBuffer()
+#include <ArdBitmap.h>
+extern ArdBitmap<WIDTH, HEIGHT> ardbitmap;
+
 #endif

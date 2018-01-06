@@ -2,6 +2,7 @@
 
 Arduboy2Base arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
+ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 byte gameState = STATE_MENU_MAIN;
 
 byte gameFrame;
