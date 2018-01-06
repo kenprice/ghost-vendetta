@@ -257,7 +257,7 @@ PROGMEM const byte playerStartPosition[][3] = {
   {16,  224, PLAYER_DIRECTION_UP}
 };
 
-PROGMEM const byte brickDensity[] = {4, 4, 5, 6};
+PROGMEM const byte brickDensity[] = {4, 4, 3, 5};
 
 // Enemies that spawn at random locations in each level
 PROGMEM const byte enemySpawns[][7] = {
