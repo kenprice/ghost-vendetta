@@ -140,14 +140,14 @@ void updateBombs() {
  * wx, wy = Where to draw sprite, in pixel coordinates
  * x, y = Where to check for obstruction, in tile coordinates
  */
-void drawBombBlast(byte wx, byte wy, byte x, byte y) {
+void drawBombBlast(int wx, int wy, byte x, byte y) {
   if (isDestroyedBrick(x, y)) return;
   arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (gameFrame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
 }
 
 void drawBomb(Bomb bomb) {
-  char wx = bomb.x * 16 + CAM_X_OFFSET - player.x;
-  char wy = bomb.y * 16 + CAM_Y_OFFSET - player.y;
+  int wx = bomb.x * 16 + CAM_X_OFFSET - player.x;
+  int wy = bomb.y * 16 + CAM_Y_OFFSET - player.y;
 
   if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (gameFrame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
