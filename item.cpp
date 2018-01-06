@@ -76,8 +76,8 @@ void drawItem(TreasureChest chest, int wx, int wy) {
 }
 
 void drawChest(TreasureChest chest, int posX, int posY) {
-  int wx = chest.x * 16 + CAM_X_OFFSET - posX;
-  int wy = chest.y * 16 + CAM_Y_OFFSET - posY;
+  int wx = chest.x * 16 + camera.xOffset - posX;
+  int wy = chest.y * 16 + camera.yOffset - posY;
   if (chest.opening) {
     if (chest.frame < 5) arduboy.drawBitmap(wx, wy, SPRITES + CHEST_OPEN_SPRITE_OFFSET, 16, 16, WHITE);
     drawItem(chest, wx, wy);

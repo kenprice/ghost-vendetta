@@ -281,8 +281,8 @@ byte getTile(byte posX, byte posY) {
 void drawLevel(byte posX, byte posY) {
   for (byte i = 0; i < BOARD_DIM; i++) {
     for (byte j = 0; j < BOARD_DIM; j++) {
-      int wx = i * 16 + CAM_X_OFFSET + 16 - posX;
-      int wy = j * 16 + CAM_Y_OFFSET + 16 - posY;
+      int wx = i * 16 + camera.xOffset + 16 - posX;
+      int wy = j * 16 + camera.yOffset + 16 - posY;
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
       if (getTile(i, j) == WALL) {

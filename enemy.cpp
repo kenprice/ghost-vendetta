@@ -84,8 +84,8 @@ void spawnEnemies() {
 void drawEnemies() {
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
-    int wx = enemies[i].x + CAM_X_OFFSET - player.x;
-    int wy = enemies[i].y + CAM_Y_OFFSET - player.y;
+    int wx = enemies[i].x + camera.xOffset - player.x;
+    int wy = enemies[i].y + camera.yOffset - player.y;
 
     // TODO: Account for different enemy sizes in the future
     int smallEnemyPadding = 4;

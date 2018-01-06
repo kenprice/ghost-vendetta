@@ -20,7 +20,7 @@ void initializePlayer() {
   player.frame = 0;
   player.state = ALIVE;
   player.cooldown = 0;
-  player.health = 10;
+  player.health = 1;
   player.flashFrame = PLAYER_FLASHING_FRAMES;
   player.direction = PLAYER_DIRECTION_RIGHT;
   player.spriteFrame = 0;
@@ -191,6 +191,21 @@ void updatePlayer() {
       gameState = STATE_GAME_OVER;
     }
   }
+
+  switch (player.direction) {
+    case PLAYER_DIRECTION_UP:
+      camera.yOffset = burp(camera.yOffset, CAM_Y_OFFSET + 8, 2);
+      break;
+    case PLAYER_DIRECTION_DOWN:
+      camera.yOffset = burp(camera.yOffset, CAM_Y_OFFSET - 8, 2);
+      break;
+    case PLAYER_DIRECTION_LEFT:
+      camera.xOffset = burp(camera.xOffset, CAM_X_OFFSET + 8, 2);
+      break;
+    case PLAYER_DIRECTION_RIGHT:
+      camera.xOffset = burp(camera.xOffset, CAM_X_OFFSET - 8, 2);
+      break;
+  }
 }
 
 void drawPlayer() {
@@ -217,8 +232,8 @@ void drawPlayer() {
   bool mirrorHorizontal = (player.spriteFrame == 3 && !movingHorizontal) || player.direction == PLAYER_DIRECTION_RIGHT;
 
   if (player.flashFrame % 2 == 0) {
-    arduboy.drawBitmap(CAM_X_OFFSET, CAM_Y_OFFSET, SPRITES + BANSHEE_SPRITE_MASK, 16, 16, BLACK);
-    arduboy.drawBitmap(CAM_X_OFFSET, CAM_Y_OFFSET, spriteAddress, 16, 16, WHITE); 
+    arduboy.drawBitmap(camera.xOffset, camera.yOffset, SPRITES + BANSHEE_SPRITE_MASK, 16, 16, BLACK);
+    arduboy.drawBitmap(camera.xOffset, camera.yOffset, spriteAddress, 16, 16, WHITE); 
   }
 }
 

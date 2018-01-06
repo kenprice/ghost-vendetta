@@ -56,8 +56,8 @@ void updateObstacles() {
 void drawObstacles(int posX, int posY) {
   for (byte i = 0; i < MAX_OBSTACLES; i++) {
     if (!obstacles[i].id) continue;
-    char wx = obstacles[i].x * 16 + CAM_X_OFFSET - posX;
-    char wy = obstacles[i].y * 16 + CAM_Y_OFFSET - posY;
+    char wx = obstacles[i].x * 16 + camera.xOffset - posX;
+    char wy = obstacles[i].y * 16 + camera.yOffset - posY;
   
     switch (obstacles[i].id) {
       case OBS_BOULDER:

@@ -29,11 +29,21 @@
 #define CAM_X_OFFSET 56 // 128 / 2 - 8
 #define CAM_Y_OFFSET 24 // 64 / 2 - 8
 
+// structures ////////////////////////////////////////////////////////////////
+typedef struct {
+  int xOffset = CAM_X_OFFSET;
+  int yOffset = CAM_Y_OFFSET;
+} Camera;
+
 // main objects //////////////////////////////////////////////////////////////
 
 extern Arduboy2Base arduboy;
 extern byte gameState;
 extern byte gameFrame;
 extern ArduboyTones sound;
+extern Camera camera;
+
+// functions /////////////////////////////////////////////////////////////////
+short burp(short start, short goal, unsigned char step);
 
 #endif

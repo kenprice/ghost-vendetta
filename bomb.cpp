@@ -146,8 +146,8 @@ void drawBombBlast(int wx, int wy, byte x, byte y) {
 }
 
 void drawBomb(Bomb bomb) {
-  int wx = bomb.x * 16 + CAM_X_OFFSET - player.x;
-  int wy = bomb.y * 16 + CAM_Y_OFFSET - player.y;
+  int wx = bomb.x * 16 + camera.xOffset - player.x;
+  int wy = bomb.y * 16 + camera.yOffset - player.y;
 
   if (bomb.exploding) {
     arduboy.drawBitmap(wx, wy, SPRITES + FIRE_SPRITE_OFFSET + (gameFrame / 5 % 2 * SPRITE_COL_OFFSET), 16, 16, WHITE);
