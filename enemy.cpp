@@ -77,7 +77,6 @@ bool spawnEnemy(byte id) {
 void spawnEnemies() {
   clearEnemies();
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    //Serial.println(pgm_read_byte(&enemySpawns[level-1][i]));
     spawnEnemy(pgm_read_byte(&enemySpawns[level-1][i]));
   }
 }
@@ -112,7 +111,7 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
 
   for (byte i = startX; i <= endX; i++) {
     for (byte j = startY; j <= endY; j++) {
-      bool isSnakeAndBoulder = getObstacleType(i, j) == OBS_BOULDER && enemy.id == ENEMY_SNAKE;
+      bool isSnakeAndBoulder = getObstacleType(i, j) == OBS_BOULDER && (enemy.id == ENEMY_SNAKE || enemy.id == ENEMY_HARD_SNAKE);
       if (collidedWith(enemy.x, enemy.y, i * 16, j * 16, 3) && (getTile(i, j) == WALL || isBrick(i, j) || isSnakeAndBoulder)) {
         return true;
       }
