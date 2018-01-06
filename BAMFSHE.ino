@@ -10,7 +10,7 @@ const FunctionPointer PROGMEM mainGameLoop[] =
   NULL,
   NULL,
   NULL,
-  NULL,
+  stateGameDisplayLevel,
   stateGamePrepareLevel,
   stateGameNextLevel,
   stateGamePlaying,

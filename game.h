@@ -7,4 +7,5 @@ void stateGamePrepareLevel();
 void stateGameNextLevel();
 void stateGamePlaying();
 void stateGameOver();
+void stateGameDisplayLevel();
 #endif

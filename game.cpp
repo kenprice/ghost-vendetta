@@ -1,4 +1,5 @@
 #include "game.h"
+#include "globals.h"
 #include "bitmap.h"
 #include "level.h"
 #include "player.h"
@@ -7,6 +8,19 @@
 #include "enemy.h"
 #include "item.h"
 #include "obstacle.h"
+
+const unsigned char* LEVEL_NUMS[10] = {
+  LEVEL_NUM_0,
+  LEVEL_NUM_1,
+  LEVEL_NUM_2,
+  LEVEL_NUM_3,
+  LEVEL_NUM_4,
+  LEVEL_NUM_5,
+  LEVEL_NUM_6,
+  LEVEL_NUM_7,
+  LEVEL_NUM_8,
+  LEVEL_NUM_9,
+};
 
 void resetGameState() {
   initializeBombs();
@@ -37,10 +51,22 @@ void stateGamePrepareLevel() {
 
 void stateGameNextLevel() {
   level++;
-  gameState = STATE_GAME_PREPARE_LEVEL;
+  gameState = STATE_GAME_DISPLAY_LEVEL;
+  gameFrame = 0;
 
   if (level == 1) {
     initializePlayer();
+  }
+}
+
+void stateGameDisplayLevel() {
+  ardbitmap.drawCompressed(6, 20, LEVEL_TEXT, WHITE, ALIGN_NONE, MIRROR_NONE);
+  ardbitmap.drawCompressed(96, 20, LEVEL_NUMS[level], WHITE, ALIGN_NONE, MIRROR_NONE);
+  if (arduboy.everyXFrames(5)) gameFrame++;
+
+  if (gameFrame > 90) {
+    gameFrame = 0;
+    gameState = STATE_GAME_PREPARE_LEVEL;
   }
 }
 

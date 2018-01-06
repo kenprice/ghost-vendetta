@@ -17,6 +17,7 @@
 
 //define game states (on main menu)
 
+#define STATE_GAME_DISPLAY_LEVEL 5
 #define STATE_GAME_PREPARE_LEVEL 6
 #define STATE_GAME_NEXT_LEVEL    7
 #define STATE_GAME_PLAYING       8
