@@ -38,6 +38,7 @@ void stateMainMenu() {
   }
 
   if (arduboy.notPressed(B_BUTTON) && start) {
+    initializePlayer();
     gameState = STATE_GAME_NEXT_LEVEL;
   }
 }
@@ -53,10 +54,6 @@ void stateGameNextLevel() {
   level++;
   gameState = STATE_GAME_DISPLAY_LEVEL;
   gameFrame = 0;
-
-  if (level == 1) {
-    initializePlayer();
-  }
 }
 
 void stateGameDisplayLevel() {
