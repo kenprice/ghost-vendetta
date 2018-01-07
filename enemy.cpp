@@ -12,8 +12,10 @@ Enemy enemies[MAX_ENEMIES];
 typedef void (*FunctionPointer) (Enemy& enemy);
 const FunctionPointer PROGMEM enemyUpdates[] =
 {
-  updateSnake,
-  updateHardSnake
+  updateGenericEnemy,
+  updateHardSnake,
+  updateSlime,
+  updateGenericEnemy
 };
 
 void clearEnemies() {
@@ -35,6 +37,8 @@ void setEnemy(Enemy& enemy, byte x, byte y, byte id) {
  * Add new enemy at tile coordinates
  */
 bool addEnemy(byte x, byte y, byte id) { 
+  if (isBrick(x, y) || getObstacleType(x, y)) return false;
+
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (enemies[i].active) continue;
     setEnemy(enemies[i], x * 16, y * 16, id);
@@ -51,7 +55,7 @@ void killEnemiesAt(byte x, byte y) {
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (!enemies[i].active) continue;
     if (collidedWith(enemies[i].x, enemies[i].y, x * 16, y * 16, 3)) {
-      enemies[i].active = false;
+      enemies[i].state = ENEMY_STATE_KILLED;
     }
   }
 }
@@ -69,7 +73,7 @@ bool spawnEnemy(byte id) {
     y = random(0, BOARD_DIM);
     tile = getTile(x, y);
     nearPlayer = x <= player.x / 16 + 1 && x >= player.x / 16 - 1 && y <= player.y / 16 + 1 && y >= player.y / 16 - 1;
-  } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || nearPlayer);
+  } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || getObstacleType(x, y) || nearPlayer);
 
   return addEnemy(x, y, id);
 }
@@ -87,12 +91,42 @@ void drawEnemies() {
     int wx = enemies[i].x + camera.xOffset - player.x;
     int wy = enemies[i].y + camera.yOffset - player.y;
 
-    // TODO: Account for different enemy sizes in the future
     int smallEnemyPadding = 4;
     switch (enemies[i].id) {
       case ENEMY_HARD_SNAKE:
       case ENEMY_SNAKE:
-        arduboy.drawBitmap(wx + smallEnemyPadding, wy + smallEnemyPadding, SPRITES_8 + SNAKE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET), 8, 8, WHITE);
+        arduboy.drawBitmap(
+          wx + smallEnemyPadding,
+          wy + smallEnemyPadding,
+          SPRITES_8 + SNAKE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET),
+          8,
+          8,
+          WHITE
+        );
+        break;
+      case ENEMY_SLIME:
+        ardbitmap.drawBitmap(
+          wx + smallEnemyPadding,
+          wy + smallEnemyPadding,
+          SPRITES_8 + SLIME_SPRITE_OFFSET + (enemies[i].direction == ENEMY_FACING_NORTH ? SPRITE_8_COL_OFFSET : 0),
+          8,
+          8,
+          WHITE,
+          ALIGN_NONE,
+          (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
+        );
+        break;
+      case ENEMY_SLIME_CHILD:
+        ardbitmap.drawBitmap(
+          wx + smallEnemyPadding + (gameFrame / 20 % 2) ? random(3) - 1 : 0,
+          wy + smallEnemyPadding + (gameFrame / 20 % 2) ? random(3) - 1 : 0,
+          SPRITES_8 + SLIME_CHILD_SPRITE_OFFSET,
+          8,
+          8,
+          WHITE,
+          ALIGN_NONE,
+          MIRROR_NONE
+        );
         break;
     }
   }
@@ -123,7 +157,7 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
   return false;
 }
 
-void updateSnakeBase(Enemy& enemy) {
+void updateEnemyBase(Enemy& enemy) {
   if (enemy.state == ENEMY_STATE_MOVING) {
     int dx = 0;
     int dy = 0;
@@ -148,18 +182,19 @@ void updateSnakeBase(Enemy& enemy) {
   }
 }
 
-void updateSnake(Enemy& enemy) {
+void updateGenericEnemy(Enemy& enemy) {
   if (!arduboy.everyXFrames(10)) return;
-  updateSnakeBase(enemy);
+  if (enemy.state == ENEMY_STATE_KILLED) {
+    enemy.active = false;
+    return;
+  }
+  updateEnemyBase(enemy);
   if (enemy.state != ENEMY_STATE_STOPPED) return;
   enemy.direction = random(4);
   enemy.state = ENEMY_STATE_MOVING;
 }
 
-void updateHardSnake(Enemy& enemy) {
-  if (!arduboy.everyXFrames(5)) return;
-  updateSnakeBase(enemy);
-  if (enemy.state != ENEMY_STATE_STOPPED) return;
+void updateEnemyPathfindMove(Enemy& enemy) {
   char dx = (player.x / 16) - (enemy.x / 16);
   char dy = (player.y / 16) - (enemy.y / 16);
 
@@ -185,6 +220,29 @@ void updateHardSnake(Enemy& enemy) {
   if (dy != 0 && enemyCheckCollision(enemy, enemy.x, enemy.y + dy)) {
     enemy.direction = random(4);
   }
+}
+
+void updateHardSnake(Enemy& enemy) {
+  if (!arduboy.everyXFrames(5)) return;
+  if (enemy.state == ENEMY_STATE_KILLED) {
+    enemy.active = false;
+    return;
+  }
+  updateEnemyBase(enemy);
+  if (enemy.state != ENEMY_STATE_STOPPED) return;
+  updateEnemyPathfindMove(enemy);
+}
+
+void updateSlime(Enemy& enemy) {
+  if (!arduboy.everyXFrames(5)) return;
+  if (enemy.state == ENEMY_STATE_KILLED) {
+    addEnemy(enemy.x, enemy.y, ENEMY_SLIME_CHILD);
+    enemy.active = false;
+    return;
+  }
+  updateEnemyBase(enemy);
+  if (enemy.state != ENEMY_STATE_STOPPED) return;
+  updateEnemyPathfindMove(enemy);
 }
 
 void updateEnemies() {
