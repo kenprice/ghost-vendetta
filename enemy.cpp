@@ -36,16 +36,16 @@ void setEnemy(Enemy& enemy, byte x, byte y, byte id) {
 /**
  * Add new enemy at tile coordinates
  */
-bool addEnemy(byte x, byte y, byte id) { 
+int addEnemy(byte x, byte y, byte id) { 
   if (isBrick(x, y) || getObstacleType(x, y)) return false;
 
   for (int i = 0; i < MAX_ENEMIES; i++) {
     if (enemies[i].active) continue;
     setEnemy(enemies[i], x * 16, y * 16, id);
-    return true;
+    return i;
   }
 
-  return false;
+  return -1;
 }
 
 /**
@@ -53,14 +53,14 @@ bool addEnemy(byte x, byte y, byte id) {
  */
 void killEnemiesAt(byte x, byte y) {
   for (int i = 0; i < MAX_ENEMIES; i++) {
-    if (!enemies[i].active) continue;
+    if (!enemies[i].active || enemies[i].state == ENEMY_STATE_FLASHING) continue;
     if (collidedWith(enemies[i].x, enemies[i].y, x * 16, y * 16, 3)) {
       enemies[i].state = ENEMY_STATE_KILLED;
     }
   }
 }
 
-bool spawnEnemy(byte id) {
+void spawnEnemy(byte id) {
   if (id == NULL) return true;
 
   byte x;
@@ -75,12 +75,12 @@ bool spawnEnemy(byte id) {
     nearPlayer = x <= player.x / 16 + 1 && x >= player.x / 16 - 1 && y <= player.y / 16 + 1 && y >= player.y / 16 - 1;
   } while ((tile != FLOOR && tile != BRICK_SPAWN) || isBrick(x, y) || getObstacleType(x, y) || nearPlayer);
 
-  return addEnemy(x, y, id);
+  addEnemy(x, y, id);
 }
 
 void spawnEnemies() {
   clearEnemies();
-  for (int i = 0; i < MAX_ENEMIES; i++) {
+  for (int i = 0; i < MAX_INIT_ENEMIES; i++) {
     spawnEnemy(pgm_read_byte(&enemySpawns[level-1][i]));
   }
 }
@@ -118,8 +118,8 @@ void drawEnemies() {
         break;
       case ENEMY_SLIME_CHILD:
         ardbitmap.drawBitmap(
-          wx + smallEnemyPadding + (gameFrame / 20 % 2) ? random(3) - 1 : 0,
-          wy + smallEnemyPadding + (gameFrame / 20 % 2) ? random(3) - 1 : 0,
+          wx + smallEnemyPadding + ((gameFrame / 40 % 2) ? random(2) - 1 : 0),
+          wy + smallEnemyPadding + ((gameFrame / 40 % 2) ? random(2) - 1 : 0),
           SPRITES_8 + SLIME_CHILD_SPRITE_OFFSET,
           8,
           8,
@@ -158,6 +158,12 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
 }
 
 void updateEnemyBase(Enemy& enemy) {
+  if (enemy.state == ENEMY_STATE_FLASHING) {
+    enemy.flashFrame--;
+    if (enemy.flashFrame <= 0) {
+      enemy.state = ENEMY_STATE_STOPPED;
+    }
+  }
   if (enemy.state == ENEMY_STATE_MOVING) {
     int dx = 0;
     int dy = 0;
@@ -233,10 +239,20 @@ void updateHardSnake(Enemy& enemy) {
   updateEnemyPathfindMove(enemy);
 }
 
+void spawnChildSlimes(Enemy enemy, int numSpawns) {
+  for (int i = 0; i < numSpawns; i++) {
+    int j = addEnemy(enemy.x / 16, enemy.y / 16, ENEMY_SLIME_CHILD);
+    enemies[j].x = enemy.x;
+    enemies[j].y = enemy.y;
+    enemies[j].state = ENEMY_STATE_FLASHING;
+    enemies[j].flashFrame = ENEMY_FLASHING_FRAMES;
+  }
+}
+
 void updateSlime(Enemy& enemy) {
   if (!arduboy.everyXFrames(5)) return;
   if (enemy.state == ENEMY_STATE_KILLED) {
-    addEnemy(enemy.x, enemy.y, ENEMY_SLIME_CHILD);
+    spawnChildSlimes(enemy, 2);
     enemy.active = false;
     return;
   }
