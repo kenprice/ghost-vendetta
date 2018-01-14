@@ -61,6 +61,7 @@ void drawObstacles(int posX, int posY) {
   
     switch (obstacles[i].id) {
       case OBS_BOULDER:
+        arduboy.fillRect(wx, wy, 16, 16, BLACK);
         arduboy.drawBitmap(wx, wy, SPRITES + BOULDER_SPRITE_OFFSET + (obstacles[i].state * SPRITE_COL_OFFSET), 16, 16, WHITE);
         break;
       case OBS_SHRUB:
