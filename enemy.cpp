@@ -149,7 +149,7 @@ bool enemyCheckCollision(Enemy enemy, int dx, int dy) {
       if (collidedWith(enemy.x, enemy.y, i * 16, j * 16, 3) && (getTile(i, j) == WALL || isBrick(i, j) || isSnakeAndBoulder)) {
         return true;
       }
-      if (collidedWith(enemy.x, enemy.y, player.x, player.y, 3)) {
+      if (collidedWith(enemy.x, enemy.y, player.x, player.y, 5)) {
         damagePlayer();
       }
     }

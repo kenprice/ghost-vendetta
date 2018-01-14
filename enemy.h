@@ -24,12 +24,12 @@
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
   byte id : 4;
+  byte flashFrame : 4;      // How many frames to lose flash (temp invincibility)
   byte direction : 2;
   byte state : 2;
   bool active : 2;
   byte x;
   byte y;
-  byte flashFrame;      // How many frames to lose flash (temp invincibility)
 } Enemy;
 
 // globals ///////////////////////////////////////////////////////////////////
