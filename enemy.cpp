@@ -61,7 +61,7 @@ void killEnemiesAt(byte x, byte y) {
 }
 
 void spawnEnemy(byte id) {
-  if (id == NULL) return true;
+  if (id == NULL) return;
 
   byte x;
   byte y;
