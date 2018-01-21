@@ -28,7 +28,7 @@ void generateBricks() {
   for (int i = 0; i < BOARD_DIM; i++) {
     for (int j= 0; j < BOARD_DIM; j++) {
       if (getTile(i, j) != BRICK_SPAWN) continue;
-      if (random(10) <= brickDensity[level-1]) {
+      if (random(10) <= brickDensity[(level-1)%NUM_LEVELS]) {
         setBrick(i, j, true);
       }
     }    

@@ -15,6 +15,8 @@
 #define NUM_LEVEL_TILES   256     // Number of possible tiles per level
 #define BOARD_DIM         (BLOCK_DIM * MAP_DIM)
 
+#define NUM_LEVELS        10      // Number of levels
+
 // globals ///////////////////////////////////////////////////////////////////
 extern byte level;
 extern PROGMEM const byte blocks[][16];

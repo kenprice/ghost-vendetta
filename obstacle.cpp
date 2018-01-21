@@ -28,7 +28,7 @@ void spawnObstacles() {
         k++;
       }
 
-      if (random(10) <= brickDensity[level-1]) {
+      if (random(10) <= brickDensity[(level-1)%NUM_LEVELS]) {
         obstacles[k].id = obstacleType;
         obstacles[k].x = i;
         obstacles[k].y = j;

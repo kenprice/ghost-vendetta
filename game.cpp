@@ -9,8 +9,12 @@
 #include "item.h"
 #include "obstacle.h"
 
-#define GAMETEXT_TITLE 0
-#define GAMETEXT_LEVEL 1
+#define GAMETEXT_TITLE     0
+#define GAMETEXT_LEVEL     1
+#define GAMETEXT_COMPLETED 2
+#define GAMETEXT_THANKS    3
+#define GAMETEXT_LETSTRY   4
+#define GAMETEXT_HARDMODE  5
 
 bool levelCleared = false;
 
@@ -34,6 +38,10 @@ const char* const levelText[] PROGMEM = {
 const char* const gameText[] PROGMEM = {
   "GHOST VENDETTA",
   "LEVEL",
+  "GAME COMPLETED!",
+  "Thanks for playing!",
+  "Let's try again...",
+  "...in HARD MODE!"
 };
 
 void resetGameState() {
@@ -72,7 +80,11 @@ void stateGamePrepareLevel() {
 
 void stateGameNextLevel() {
   level++;
-  gameState = STATE_GAME_DISPLAY_LEVEL;
+  if (level == 11) {
+    gameState = STATE_GAME_EASY_COMPLETE;
+  } else {
+    gameState = STATE_GAME_DISPLAY_LEVEL;
+  }
   gameFrame = 0;
 }
 
@@ -81,10 +93,10 @@ void stateGameDisplayLevel() {
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_LEVEL]));
   
   arduboy.setCursor(51, 20);
-  arduboy.print(level);
+  arduboy.print((level % NUM_LEVELS) == 0 ? 10 : level % NUM_LEVELS);
   
   arduboy.setCursor(14, 28);
-  arduboy.print((char*)pgm_read_word(&levelText[level-1]));
+  arduboy.print((char*)pgm_read_word(&levelText[(level-1)%NUM_LEVELS]));
 
   // Start bomb animation
   arduboy.drawBitmap(2, 28, SPRITES_8 + BOMB_SPRITE_OFFSET, 8, 8, WHITE);
@@ -162,5 +174,40 @@ void stateGameVictory() {
   gameFrame++;
 
   if (gameFrame > 30) gameState = STATE_GAME_NEXT_LEVEL;
+}
+
+void stateGameEasyComplete() {
+  arduboy.setCursor(12, 3);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_COMPLETED]));
+
+  arduboy.setCursor(12, 21);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_THANKS]));
+
+  arduboy.setCursor(0, 39);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_LETSTRY]));
+
+  arduboy.setCursor(40, 48);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_HARDMODE]));
+
+  ardbitmap.drawBitmap(
+    0,
+    2,
+    SPRITES_8 + SLIME_SPRITE_OFFSET,
+    8,
+    8,
+    WHITE,
+    ALIGN_NONE,
+    (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
+  );
+
+  static bool start = false;
+
+  if (arduboy.pressed(B_BUTTON)) {
+    start = true;
+  }
+
+  if (arduboy.notPressed(B_BUTTON) && start) {
+    gameState = STATE_GAME_NEXT_LEVEL;
+  }
 }
 

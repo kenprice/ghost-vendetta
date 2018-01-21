@@ -491,10 +491,25 @@ PROGMEM const byte playerStartPosition[][3] = {
   {224, 224, PLAYER_DIRECTION_UP},
 };
 
-const byte brickDensity[] = {4, 4, 3, 5, 5, 3, 3, 4, 3, 3};
+const byte brickDensity[] = {
+  4, 4, 3, 5, 5, 3, 3, 4, 3, 3,
+  // Hard Mode
+  4, 4, 3, 5, 5, 3, 3, 4, 3, 3,
+};
 
 // Enemies that spawn at random locations in each level
 PROGMEM const byte enemySpawns[][7] = {
+  {0x01, 0x01, 0x01, 0x01, NULL, NULL, NULL},
+  {0x01, 0x01, 0x01, 0x01, 0x02, NULL, NULL},
+  {0x01, 0x01, 0x02, 0x02, 0x02, NULL, NULL},
+  {0x02, 0x02, 0x02, 0x02, 0x02, NULL, NULL},
+  {0x02, 0x02, 0x02, 0x03, 0x03, NULL, NULL},
+  {0x03, 0x03, 0x03, 0x03, NULL, NULL, NULL},
+  {0x03, 0x03, 0x03, 0x03, 0x03, NULL, NULL},
+  {0x02, 0x03, 0x05, 0x05, 0x05, NULL, NULL},
+  {0x01, 0x01, 0x01, 0x05, 0x05, 0x05, NULL},
+  {0x03, 0x03, 0x05, 0x05, 0x05, 0x05, 0x05},
+  // Hard Mode
   {0x01, 0x01, 0x01, 0x01, NULL, NULL, NULL},
   {0x01, 0x01, 0x01, 0x01, 0x02, NULL, NULL},
   {0x01, 0x01, 0x02, 0x02, 0x02, NULL, NULL},
@@ -510,7 +525,7 @@ PROGMEM const byte enemySpawns[][7] = {
 byte getTile(byte posX, byte posY) {
   return pgm_read_byte(
     &blocks[
-      pgm_read_byte(&maps[level - 1][posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM])
+      pgm_read_byte(&maps[(level-1)%NUM_LEVELS][posX / BLOCK_DIM + posY / BLOCK_DIM * MAP_DIM])
     ][
       (posX % BLOCK_DIM) + ((posY % BLOCK_DIM) * BLOCK_DIM)
     ]
@@ -525,7 +540,7 @@ void drawLevel(byte posX, byte posY) {
       if (wx < 0 || wx > WIDTH + 16 || wy < 0 || wy > HEIGHT + 16) continue;
 
       if (getTile(i, j) == WALL) {
-        arduboy.drawBitmap(wx - 16, wy - 16, SPRITES + WALL_SPRITE_OFFSET + ((level - 1) % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
+        arduboy.drawBitmap(wx - 16, wy - 16, SPRITES + WALL_SPRITE_OFFSET + (((level-1) % NUM_LEVELS) % 4 * SPRITE_COL_OFFSET), 16, 16, WHITE);
       }
     }
   }

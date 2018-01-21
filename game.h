@@ -8,4 +8,5 @@ void stateGameNextLevel();
 void stateGamePlaying();
 void stateGameOver();
 void stateGameDisplayLevel();
+void stateGameEasyComplete();
 #endif

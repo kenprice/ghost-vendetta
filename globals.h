@@ -12,8 +12,7 @@
 #define STATE_MENU_MAIN          1
 #define STATE_MENU_HELP          2
 #define STATE_MENU_PLAY          3
-#define STATE_MENU_INFO          4
-#define STATE_MENU_SOUNDFX       5
+#define STATE_MENU_SOUNDFX       4
 
 //define game states (on main menu)
 #define STATE_GAME_DISPLAY_LEVEL 5
@@ -23,6 +22,7 @@
 #define STATE_GAME_OVER          9
 #define STATE_GAME_PAUSE         10
 #define STATE_GAME_END           11
+#define STATE_GAME_EASY_COMPLETE 12
 
 //camera offsets
 #define CAM_X_OFFSET 56 // 128 / 2 - 8
