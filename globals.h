@@ -16,7 +16,6 @@
 #define STATE_MENU_SOUNDFX       5
 
 //define game states (on main menu)
-
 #define STATE_GAME_DISPLAY_LEVEL 5
 #define STATE_GAME_PREPARE_LEVEL 6
 #define STATE_GAME_NEXT_LEVEL    7
@@ -26,9 +25,11 @@
 #define STATE_GAME_END           11
 
 //camera offsets
-
 #define CAM_X_OFFSET 56 // 128 / 2 - 8
 #define CAM_Y_OFFSET 24 // 64 / 2 - 8
+
+// Debug mode
+#define DEBUG false
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {
@@ -38,7 +39,7 @@ typedef struct {
 
 // main objects //////////////////////////////////////////////////////////////
 
-extern Arduboy2Base arduboy;
+extern Arduboy2 arduboy;
 extern byte gameState;
 extern byte gameFrame;
 extern ArduboyTones sound;
