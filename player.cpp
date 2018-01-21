@@ -172,6 +172,10 @@ void handlePlayerMove() {
       player.cooldown = 15;
     }
   }
+
+  if (DEBUG && arduboy.pressed(A_BUTTON)) {
+    gameState = STATE_GAME_NEXT_LEVEL;
+  }
 }
 
 void updatePlayer() {
