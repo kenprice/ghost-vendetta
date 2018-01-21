@@ -49,6 +49,7 @@ void stateMainMenu() {
   static bool start = false;
 
   arduboy.drawBitmap(17, 4, TITLE, 88, 12, WHITE);
+  arduboy.drawBitmap(55, 3, TITLE_URL, 72, 5, WHITE);
   arduboy.setCursor(21, 20);
   arduboy.print((char*)pgm_read_word(&gameText[0]));
 
