@@ -21,12 +21,12 @@ const uint16_t SOUND_LEVEL_CLEAR[] PROGMEM = {
 const char* const levelText[] PROGMEM = {
   "Kill It With Fire",
   "Snakes & Treasure",
-  "  Sneaky Snakes  ",
-  "  Boulder  Dash  ",
-  " Slimy Situation ",
+  "Sneaky Snakes",
+  "Boulder Dash",
+  "Slimy Situation",
   "Duplicating Dunce",
   "Catacomb Concerns",
-  "   Hide & Seek   ",
+  "Hide & Seek",
 };
 
 const char* const gameText[] PROGMEM = {
