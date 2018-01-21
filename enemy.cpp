@@ -138,7 +138,7 @@ void drawEnemies() {
         playerRect.width = 80;          playerRect.height = 80;
 
         // Invisible unless near player
-        if (!collidedWithRect(enemyRect, playerRect)) return;\
+        if (!collidedWithRect(enemyRect, playerRect)) return;
 
         ardbitmap.drawBitmap(
           wx + smallEnemyPadding,

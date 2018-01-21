@@ -405,7 +405,13 @@ PROGMEM const byte maps[][MAP_DIM * MAP_DIM] = {
     0x31, 0x32, 0x01, 0x33,
     0x34, 0x35, 0x36, 0x37,
     0x2E, 0x38, 0x39, 0x3A
-  }
+  },
+  {
+    0x00, 0x00, 0x0C, 0x23,
+    0x01, 0x10, 0x0E, 0x26,
+    0x1E, 0x0E, 0x2C, 0x0B,
+    0x20, 0x0D, 0x00, 0x00
+  },
 };
 
 PROGMEM const byte itemSpawns[][15] = {
@@ -453,6 +459,13 @@ PROGMEM const byte itemSpawns[][15] = {
     0, 0, 0,
     0, 0, 0
   },
+  {
+    ITEM_APPLE, 7, 7,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0
+  },
 };
 
 PROGMEM const byte playerStartPosition[][3] = {
@@ -463,10 +476,11 @@ PROGMEM const byte playerStartPosition[][3] = {
   {16,  224, PLAYER_DIRECTION_UP},
   {128, 128, PLAYER_DIRECTION_LEFT},
   {80,  224, PLAYER_DIRECTION_UP},
-  {224,  224, PLAYER_DIRECTION_UP},
+  {224, 224, PLAYER_DIRECTION_UP},
+  {224,  32,  PLAYER_DIRECTION_RIGHT},
 };
 
-const byte brickDensity[] = {4, 4, 3, 5, 5, 3, 3};
+const byte brickDensity[] = {4, 4, 3, 5, 5, 3, 3, 4};
 
 // Enemies that spawn at random locations in each level
 PROGMEM const byte enemySpawns[][7] = {
@@ -477,6 +491,7 @@ PROGMEM const byte enemySpawns[][7] = {
   {0x02, 0x02, 0x02, 0x03, 0x03, NULL, NULL},
   {0x03, 0x03, 0x03, 0x03, NULL, NULL, NULL},
   {0x03, 0x03, 0x03, 0x03, 0x03, NULL, NULL},
+  {0x02, 0x03, 0x05, 0x05, 0x05, NULL, NULL},
 };
 
 byte getTile(byte posX, byte posY) {
