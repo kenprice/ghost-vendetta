@@ -9,18 +9,8 @@
 #include "item.h"
 #include "obstacle.h"
 
-const unsigned char* LEVEL_NUMS[10] = {
-  LEVEL_NUM_0,
-  LEVEL_NUM_1,
-  LEVEL_NUM_2,
-  LEVEL_NUM_3,
-  LEVEL_NUM_4,
-  LEVEL_NUM_5,
-  LEVEL_NUM_6,
-  LEVEL_NUM_7,
-  LEVEL_NUM_8,
-  LEVEL_NUM_9,
-};
+#define GAMETEXT_TITLE 0
+#define GAMETEXT_LEVEL 1
 
 const char* const levelText[] PROGMEM = {
   "Kill It With Fire",
@@ -30,11 +20,12 @@ const char* const levelText[] PROGMEM = {
   " Slimy Situation ",
   "Duplicating Dunce",
   "Catacomb Concerns",
-  "   Hide & Seek   "
+  "   Hide & Seek   ",
 };
 
 const char* const gameText[] PROGMEM = {
   "GHOST VENDETTA",
+  "LEVEL",
 };
 
 void resetGameState() {
@@ -49,9 +40,9 @@ void stateMainMenu() {
   static bool start = false;
 
   arduboy.drawBitmap(17, 4, TITLE, 88, 12, WHITE);
-  arduboy.drawBitmap(55, 3, TITLE_URL, 72, 5, WHITE);
   arduboy.setCursor(21, 20);
-  arduboy.print((char*)pgm_read_word(&gameText[0]));
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_TITLE]));
+  arduboy.drawBitmap(27, 59, TITLE_URL, 72, 5, WHITE);
 
   if (arduboy.pressed(B_BUTTON)) {
     start = true;
@@ -77,9 +68,13 @@ void stateGameNextLevel() {
 }
 
 void stateGameDisplayLevel() {
-  ardbitmap.drawCompressed(6, 20, LEVEL_TEXT, WHITE, ALIGN_NONE, MIRROR_NONE);
-  ardbitmap.drawCompressed(96, 20, LEVEL_NUMS[level], WHITE, ALIGN_NONE, MIRROR_NONE);
-  arduboy.setCursor(11, 50);
+  arduboy.setCursor(11, 20);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_LEVEL]));
+  
+  arduboy.setCursor(51, 20);
+  arduboy.print(level);
+  
+  arduboy.setCursor(11, 28);
   arduboy.print((char*)pgm_read_word(&levelText[level-1]));
 
   if (arduboy.everyXFrames(5)) gameFrame++;
