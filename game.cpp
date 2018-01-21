@@ -22,6 +22,17 @@ const unsigned char* LEVEL_NUMS[10] = {
   LEVEL_NUM_9,
 };
 
+const char* const levelText[] PROGMEM = {
+  "Kill It With Fire",
+  "Snakes & Treasure",
+  "  Sneaky Snakes  ",
+  "  Boulder  Dash  ",
+  " Slimy Situation ",
+  "Duplicating Dunce",
+  "Catacomb Concerns",
+  "   Hide & Seek   "
+};
+
 void resetGameState() {
   initializeBombs();
   generateBricks();
@@ -59,6 +70,9 @@ void stateGameNextLevel() {
 void stateGameDisplayLevel() {
   ardbitmap.drawCompressed(6, 20, LEVEL_TEXT, WHITE, ALIGN_NONE, MIRROR_NONE);
   ardbitmap.drawCompressed(96, 20, LEVEL_NUMS[level], WHITE, ALIGN_NONE, MIRROR_NONE);
+  arduboy.setCursor(11, 50);
+  arduboy.print((char*)pgm_read_word(&levelText[level-1]));
+
   if (arduboy.everyXFrames(5)) gameFrame++;
 
   if (gameFrame > 90) {
