@@ -33,6 +33,10 @@ const char* const levelText[] PROGMEM = {
   "   Hide & Seek   "
 };
 
+const char* const gameText[] PROGMEM = {
+  "GHOST VENDETTA",
+};
+
 void resetGameState() {
   initializeBombs();
   generateBricks();
@@ -43,6 +47,10 @@ void resetGameState() {
 
 void stateMainMenu() {
   static bool start = false;
+
+  arduboy.drawBitmap(17, 4, TITLE, 88, 12, WHITE);
+  arduboy.setCursor(21, 20);
+  arduboy.print((char*)pgm_read_word(&gameText[0]));
 
   if (arduboy.pressed(B_BUTTON)) {
     start = true;
