@@ -130,20 +130,18 @@ void drawEnemies() {
         );
         break;
       case ENEMY_ZOMBIE:
-        Rect enemyRect;
-        enemyRect.x = enemies[i].x;     enemyRect.y = enemies[i].y;
-        enemyRect.width = 8;            enemyRect.height = 8;
-        Rect playerRect;
-        playerRect.x = player.x - 32;   playerRect.y = player.y - 32;
-        playerRect.width = 80;          playerRect.height = 80;
-
         // Invisible unless near player
-        if (!collidedWithRect(enemyRect, playerRect)) return;
+        bool isNearPlayer = enemies[i].x < player.x - 32 + 80 &&
+            enemies[i].x + 8 > player.x - 32 &&
+            enemies[i].y < player.y - 32 + 80 &&
+            8 + enemies[i].y > player.y - 32;
+
+        if (!isNearPlayer) return;
 
         ardbitmap.drawBitmap(
           wx + smallEnemyPadding,
           wy + smallEnemyPadding,
-          SPRITES_8 + ZOMBIE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET),
+          SPRITES_8 + ZOMBIE_SPRITE_OFFSET + ((gameFrame / 20 % 3) * SPRITE_8_COL_OFFSET),
           8,
           8,
           WHITE,
