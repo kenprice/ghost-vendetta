@@ -6,7 +6,9 @@
 #include "collision.h"
 #include "brick.h"
 
-const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {NOTE_C7, 25, NOTE_A7, 25, NOTE_C7, 25, TONES_END};
+const uint16_t SOUND_CHEST_OPEN[] PROGMEM = {
+  NOTE_A5, 25, NOTE_D5, 25, NOTE_E5, 25, NOTE_A5, 25, TONES_END
+};
 
 TreasureChest treasureChests[MAX_CHESTS];
 
@@ -39,7 +41,7 @@ void spawnChests() {
 void updateChests() {
   for (int i = 0; i < MAX_CHESTS; i++) {
     if (!treasureChests[i].active) continue;
-    if (collidedWith(treasureChests[i].x * 16, treasureChests[i].y * 16, player.x, player.y, 3)) {
+    if (collidedWith(treasureChests[i].x * 16, treasureChests[i].y * 16, player.x, player.y, 3) && !treasureChests[i].opening) {
       // Open chest
       treasureChests[i].opening = true;
       sound.tones(SOUND_CHEST_OPEN);

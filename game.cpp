@@ -12,6 +12,12 @@
 #define GAMETEXT_TITLE 0
 #define GAMETEXT_LEVEL 1
 
+bool levelCleared = false;
+
+const uint16_t SOUND_LEVEL_CLEAR[] PROGMEM = {
+  NOTE_A6, 50, NOTE_D6, 50, NOTE_E6, 50, NOTE_A6, 50, TONES_END
+};
+
 const char* const levelText[] PROGMEM = {
   "Kill It With Fire",
   "Snakes & Treasure",
@@ -108,10 +114,20 @@ void stateGamePlaying() {
   // Check win condition
   bool enemyAlive = false;
   for (int i = 0; i < MAX_ENEMIES && !enemyAlive; i++) {
-    enemyAlive = enemies[i].active;
+    enemyAlive |= enemies[i].active;
   }
-  if (!enemyAlive) {
-    gameState = STATE_GAME_NEXT_LEVEL;
+  if (!enemyAlive && !levelCleared) {
+    levelCleared = true;
+    gameFrame = 0;
+    sound.tones(SOUND_LEVEL_CLEAR);
+  }
+  if (levelCleared) {
+    gameFrame++;
+    if (gameFrame > 90) {
+      gameFrame = 0;
+      levelCleared = false;
+      gameState = STATE_GAME_NEXT_LEVEL;
+    }
   }
 
   drawLevel(player.x, player.y);
@@ -126,5 +142,22 @@ void stateGamePlaying() {
 void stateGameOver() {
   resetGameState();
   gameState = STATE_GAME_PREPARE_LEVEL;
+}
+
+void stateGameVictory() {
+  updatePlayer();
+  updateBombs();
+  updateEnemies();
+  updateBricks();
+
+  drawLevel(player.x, player.y);
+  drawBricks(player.x, player.y);
+  drawBombs();
+  drawEnemies();
+  drawPlayer();
+
+  gameFrame++;
+
+  if (gameFrame > 30) gameState = STATE_GAME_NEXT_LEVEL;
 }
 

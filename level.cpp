@@ -418,7 +418,7 @@ PROGMEM const byte itemSpawns[][15] = {
   // Format: <item1 id>, <item1 x>, <item1 y>, <item2 id>, <item2 x>, <item2 y>...
   // 0, 0 for no item
   {
-    ITEM_APPLE, 1, 2,
+    0, 0, 0,
     0, 0, 0,
     0, 0, 0,
     0, 0, 0,
