@@ -55,6 +55,7 @@ void stateMainMenu() {
   }
 
   if (arduboy.notPressed(B_BUTTON) && start) {
+    randomSeed(millis());
     initializePlayer();
     gameState = STATE_GAME_NEXT_LEVEL;
   }
