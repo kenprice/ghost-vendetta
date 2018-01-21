@@ -136,7 +136,7 @@ void drawEnemies() {
             enemies[i].y < player.y - 32 + 80 &&
             8 + enemies[i].y > player.y - 32;
 
-        if (!isNearPlayer) return;
+        if (!isNearPlayer) continue;
 
         ardbitmap.drawBitmap(
           wx + smallEnemyPadding,

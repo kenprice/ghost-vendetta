@@ -9,7 +9,7 @@
 #define ITEM_SWORD   3
 #define ITEM_FLAME   4
 
-#define MAX_CHESTS   5
+#define MAX_CHESTS   2
 
 // structures ////////////////////////////////////////////////////////////////
 typedef struct {

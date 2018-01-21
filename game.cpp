@@ -27,6 +27,8 @@ const char* const levelText[] PROGMEM = {
   "Duplicating Dunce",
   "Catacomb Concerns",
   "Hide & Seek",
+  "Centralized",
+  "Finally Finished",
 };
 
 const char* const gameText[] PROGMEM = {
