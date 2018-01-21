@@ -11,10 +11,9 @@
 
 #define GAMETEXT_TITLE     0
 #define GAMETEXT_LEVEL     1
-#define GAMETEXT_COMPLETED 2
-#define GAMETEXT_THANKS    3
-#define GAMETEXT_LETSTRY   4
-#define GAMETEXT_HARDMODE  5
+#define GAMETEXT_THANKS    2
+#define GAMETEXT_LETSTRY   3
+#define GAMETEXT_HARDMODE  4
 
 bool levelCleared = false;
 
@@ -38,7 +37,6 @@ const char* const levelText[] PROGMEM = {
 const char* const gameText[] PROGMEM = {
   "GHOST VENDETTA",
   "LEVEL",
-  "GAME COMPLETED!",
   "Thanks for playing!",
   "Let's try again...",
   "...in HARD MODE!"
@@ -178,15 +176,12 @@ void stateGameVictory() {
 
 void stateGameEasyComplete() {
   arduboy.setCursor(12, 3);
-  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_COMPLETED]));
-
-  arduboy.setCursor(12, 21);
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_THANKS]));
 
-  arduboy.setCursor(0, 39);
+  arduboy.setCursor(0, 21);
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_LETSTRY]));
 
-  arduboy.setCursor(40, 48);
+  arduboy.setCursor(40, 39);
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_HARDMODE]));
 
   ardbitmap.drawBitmap(
@@ -200,13 +195,7 @@ void stateGameEasyComplete() {
     (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
   );
 
-  static bool start = false;
-
   if (arduboy.pressed(B_BUTTON)) {
-    start = true;
-  }
-
-  if (arduboy.notPressed(B_BUTTON) && start) {
     gameState = STATE_GAME_NEXT_LEVEL;
   }
 }
