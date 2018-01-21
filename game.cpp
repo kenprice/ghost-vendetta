@@ -68,14 +68,26 @@ void stateGameNextLevel() {
 }
 
 void stateGameDisplayLevel() {
-  arduboy.setCursor(11, 20);
+  arduboy.setCursor(14, 20);
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_LEVEL]));
   
   arduboy.setCursor(51, 20);
   arduboy.print(level);
   
-  arduboy.setCursor(11, 28);
+  arduboy.setCursor(14, 28);
   arduboy.print((char*)pgm_read_word(&levelText[level-1]));
+
+  // Start bomb animation
+  arduboy.drawBitmap(2, 28, SPRITES_8 + BOMB_SPRITE_OFFSET, 8, 8, WHITE);
+  for (byte i = 0; i < 3; i++) {
+    arduboy.drawPixel(5 + random(7), 21 + random(7));
+  }
+  if (gameFrame < 90) arduboy.drawPixel(2 + 3, 28 - 1);
+  if (gameFrame < 60) arduboy.drawPixel(2 + 4, 28 - 2);
+  if (gameFrame < 50) arduboy.drawPixel(2 + 3, 28 - 3);
+  if (gameFrame < 40) arduboy.drawPixel(2 + 4, 28 - 4);
+  if (gameFrame < 20) arduboy.drawPixel(2 + 3, 28 - 5);
+  // End bomb animation
 
   if (arduboy.everyXFrames(5)) gameFrame++;
 

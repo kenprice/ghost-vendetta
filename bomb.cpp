@@ -156,7 +156,7 @@ void drawBomb(Bomb bomb) {
     for (byte i = 1; i <= bomb.blastNorth; i++) drawBombBlast(wx, wy - (i * 16), bomb.x, bomb.y - i);
     for (byte i = 1; i <= bomb.blastSouth; i++) drawBombBlast(wx, wy + (i * 16), bomb.x, bomb.y + i);
   } else {
-    arduboy.drawBitmap(wx + 4, wy + 6, SPRITES_8 + 128 + 64, 8, 8, WHITE);
+    arduboy.drawBitmap(wx + 4, wy + 6, SPRITES_8 + BOMB_SPRITE_OFFSET, 8, 8, WHITE);
 
     for (byte i = 0; i < 3; i++) {
       arduboy.drawPixel(wx + 3 + random(7), wy - 1 + random(7));
