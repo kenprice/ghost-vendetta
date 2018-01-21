@@ -15,7 +15,8 @@ const FunctionPointer PROGMEM enemyUpdates[] =
   updateGenericEnemy,
   updateHardSnake,
   updateSlime,
-  updateGenericEnemy
+  updateGenericEnemy,
+  updateZombie
 };
 
 void clearEnemies() {
@@ -126,6 +127,28 @@ void drawEnemies() {
           WHITE,
           ALIGN_NONE,
           MIRROR_NONE
+        );
+        break;
+      case ENEMY_ZOMBIE:
+        Rect enemyRect;
+        enemyRect.x = enemies[i].x;     enemyRect.y = enemies[i].y;
+        enemyRect.width = 8;            enemyRect.height = 8;
+        Rect playerRect;
+        playerRect.x = player.x - 32;   playerRect.y = player.y - 32;
+        playerRect.width = 80;          playerRect.height = 80;
+
+        // Invisible unless near player
+        if (!collidedWithRect(enemyRect, playerRect)) return;\
+
+        ardbitmap.drawBitmap(
+          wx + smallEnemyPadding,
+          wy + smallEnemyPadding,
+          SPRITES_8 + ZOMBIE_SPRITE_OFFSET + ((gameFrame / 20 % 2) ? 0 : SPRITE_8_COL_OFFSET),
+          8,
+          8,
+          WHITE,
+          ALIGN_NONE,
+          enemies[i].direction == ENEMY_FACING_EAST ? MIRROR_HORIZONTAL : MIRROR_NONE
         );
         break;
     }
@@ -259,6 +282,21 @@ void updateSlime(Enemy& enemy) {
   updateEnemyBase(enemy);
   if (enemy.state != ENEMY_STATE_STOPPED) return;
   updateEnemyPathfindMove(enemy);
+}
+
+void updateZombie(Enemy& enemy) {
+  if (!arduboy.everyXFrames(3)) return;
+  if (enemy.state == ENEMY_STATE_KILLED) {
+    enemy.active = false;
+    return;
+  }
+  updateEnemyBase(enemy);
+  if (enemy.state != ENEMY_STATE_STOPPED) return;
+  enemy.direction = random(4);
+  if (enemy.direction == random(4)) {
+    updateEnemyPathfindMove(enemy);
+  }
+  enemy.state = ENEMY_STATE_MOVING;
 }
 
 void updateEnemies() {

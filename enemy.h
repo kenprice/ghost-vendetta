@@ -18,6 +18,7 @@
 #define ENEMY_HARD_SNAKE      0x02
 #define ENEMY_SLIME           0x03
 #define ENEMY_SLIME_CHILD     0x04
+#define ENEMY_ZOMBIE          0x05
 
 #define ENEMY_FLASHING_FRAMES 5    // Number of frames it takes for enemy to lose flash
 
@@ -45,4 +46,5 @@ void updateEnemies();
 void updateGenericEnemy(Enemy& enemy);
 void updateHardSnake(Enemy& enemy);
 void updateSlime(Enemy& enemy);
+void updateZombie(Enemy& enemy);
 
