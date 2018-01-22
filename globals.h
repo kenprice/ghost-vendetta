@@ -23,6 +23,7 @@
 #define STATE_GAME_PAUSE         10
 #define STATE_GAME_END           11
 #define STATE_GAME_EASY_COMPLETE 12
+#define STATE_GAME_HARD_COMPLETE 13
 
 //camera offsets
 #define CAM_X_OFFSET 56 // 128 / 2 - 8

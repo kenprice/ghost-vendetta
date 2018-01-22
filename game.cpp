@@ -14,6 +14,9 @@
 #define GAMETEXT_THANKS    2
 #define GAMETEXT_LETSTRY   3
 #define GAMETEXT_HARDMODE  4
+#define GAMETEXT_END1      5
+#define GAMETEXT_END2      6
+#define GAMETEXT_END3      7
 
 bool levelCleared = false;
 
@@ -28,7 +31,7 @@ const char* const levelText[] PROGMEM = {
   "Boulder Dash",
   "Slimy Situation",
   "Duplicating Dunce",
-  "Catacomb Concerns",
+  "Catacomb of Concerns",
   "Hide & Seek",
   "Centralized",
   "Finally Finished",
@@ -39,7 +42,10 @@ const char* const gameText[] PROGMEM = {
   "LEVEL",
   "Thanks for playing!",
   "Let's try again...",
-  "...in HARD MODE!"
+  "...in HARD MODE!",
+  "BAMFSHE has carried",
+  "out her vendetta.",
+  "Now she may rest..."
 };
 
 void resetGameState() {
@@ -80,6 +86,9 @@ void stateGameNextLevel() {
   level++;
   if (level == 11) {
     gameState = STATE_GAME_EASY_COMPLETE;
+  }
+  else if (level == 21) {
+    gameState = STATE_GAME_HARD_COMPLETE;
   } else {
     gameState = STATE_GAME_DISPLAY_LEVEL;
   }
@@ -195,8 +204,70 @@ void stateGameEasyComplete() {
     (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
   );
 
+  static bool start = false;
+
   if (arduboy.pressed(B_BUTTON)) {
+    start = true;
+  }
+
+  if (arduboy.notPressed(B_BUTTON) && start) {
     gameState = STATE_GAME_DISPLAY_LEVEL;
+    gameFrame = 0;
+  }
+}
+
+void stateGameHardComplete(){
+  arduboy.setCursor(12, 3);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_THANKS]));
+
+  arduboy.setCursor(12, 21);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_END1]));
+
+  arduboy.setCursor(12, 29);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_END2]));
+
+  arduboy.setCursor(12, 47);
+  arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_END3]));
+
+  ardbitmap.drawBitmap(
+    0,
+    2,
+    SPRITES_8 + SNAKE_SPRITE_OFFSET + (((gameFrame / 10) % 2) * SPRITE_8_COL_OFFSET),
+    8,
+    8,
+    WHITE,
+    ALIGN_NONE,
+    (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
+  );
+  ardbitmap.drawBitmap(
+    0,
+    25,
+    SPRITES_8 + SLIME_SPRITE_OFFSET - (((gameFrame / 10) % 2) * SPRITE_8_COL_OFFSET),
+    8,
+    8,
+    WHITE,
+    ALIGN_NONE,
+    (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
+  );
+  ardbitmap.drawBitmap(
+    0,
+    46,
+    SPRITES_8 + ZOMBIE_SPRITE_OFFSET + (((gameFrame / 7) % 3) * SPRITE_8_COL_OFFSET),
+    8,
+    8,
+    WHITE,
+    ALIGN_NONE,
+    (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
+  );
+
+  static bool start = false;
+
+  if (arduboy.pressed(B_BUTTON)) {
+    start = true;
+  }
+
+  if (arduboy.notPressed(B_BUTTON) && start) {
+    gameState = STATE_MENU_INTRO;
     gameFrame = 0;
   }
 }

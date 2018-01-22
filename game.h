@@ -9,4 +9,5 @@ void stateGamePlaying();
 void stateGameOver();
 void stateGameDisplayLevel();
 void stateGameEasyComplete();
+void stateGameHardComplete();
 #endif
