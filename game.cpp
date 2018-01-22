@@ -196,7 +196,8 @@ void stateGameEasyComplete() {
   );
 
   if (arduboy.pressed(B_BUTTON)) {
-    gameState = STATE_GAME_NEXT_LEVEL;
+    gameState = STATE_GAME_DISPLAY_LEVEL;
+    gameFrame = 0;
   }
 }
 
