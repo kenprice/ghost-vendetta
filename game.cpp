@@ -19,9 +19,16 @@
 #define GAMETEXT_END3      7
 
 bool levelCleared = false;
+bool startMainMenu = false;
+bool startHardComplete = false;
+bool startEasyComplete = false;
 
 const uint16_t SOUND_LEVEL_CLEAR[] PROGMEM = {
   NOTE_A6, 50, NOTE_D6, 50, NOTE_E6, 50, NOTE_A6, 50, TONES_END
+};
+
+const uint16_t SOUND_PLAYER_DIED[] PROGMEM = {
+  NOTE_G4, 250, NOTE_FS4, 250, NOTE_F4, 250, NOTE_E4, 500, TONES_END
 };
 
 const char* const levelText[] PROGMEM = {
@@ -45,7 +52,7 @@ const char* const gameText[] PROGMEM = {
   "...in HARD MODE!",
   "BAMFSHE has carried",
   "out her vendetta.",
-  "Now she may rest..."
+  "Now she may rest...",
 };
 
 void resetGameState() {
@@ -57,18 +64,16 @@ void resetGameState() {
 }
 
 void stateMainMenu() {
-  static bool start = false;
-
   arduboy.drawBitmap(17, 4, TITLE, 88, 12, WHITE);
   arduboy.setCursor(21, 20);
   arduboy.print((char*)pgm_read_word(&gameText[GAMETEXT_TITLE]));
   arduboy.drawBitmap(27, 59, TITLE_URL, 72, 5, WHITE);
 
   if (arduboy.pressed(B_BUTTON)) {
-    start = true;
+    startMainMenu = true;
   }
 
-  if (arduboy.notPressed(B_BUTTON) && start) {
+  if (arduboy.notPressed(B_BUTTON) && startMainMenu) {
     randomSeed(millis());
     initializePlayer();
     gameState = STATE_GAME_NEXT_LEVEL;
@@ -86,9 +91,11 @@ void stateGameNextLevel() {
   level++;
   if (level == 11) {
     gameState = STATE_GAME_EASY_COMPLETE;
+    startEasyComplete = false;
   }
   else if (level == 21) {
     gameState = STATE_GAME_HARD_COMPLETE;
+    startHardComplete = false;
   } else {
     gameState = STATE_GAME_DISPLAY_LEVEL;
   }
@@ -162,8 +169,16 @@ void stateGamePlaying() {
 }
 
 void stateGameOver() {
-  resetGameState();
-  gameState = STATE_GAME_PREPARE_LEVEL;
+  if (gameFrame == 1) {
+    sound.tones(SOUND_PLAYER_DIED);
+  }
+
+  gameFrame++;
+
+  if (gameFrame > 90) {
+    resetGameState();
+    gameState = STATE_GAME_PREPARE_LEVEL;
+  }
 }
 
 void stateGameVictory() {
@@ -204,13 +219,11 @@ void stateGameEasyComplete() {
     (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
   );
 
-  static bool start = false;
-
   if (arduboy.pressed(B_BUTTON)) {
-    start = true;
+    startEasyComplete = true;
   }
 
-  if (arduboy.notPressed(B_BUTTON) && start) {
+  if (arduboy.notPressed(B_BUTTON) && startEasyComplete) {
     gameState = STATE_GAME_DISPLAY_LEVEL;
     gameFrame = 0;
   }
@@ -260,15 +273,15 @@ void stateGameHardComplete(){
     (gameFrame / 20 % 2) ? MIRROR_HORIZONTAL : MIRROR_NONE
   );
 
-  static bool start = false;
-
   if (arduboy.pressed(B_BUTTON)) {
-    start = true;
+    startHardComplete = true;
   }
 
-  if (arduboy.notPressed(B_BUTTON) && start) {
-    gameState = STATE_MENU_INTRO;
+  if (arduboy.notPressed(B_BUTTON) && startHardComplete) {
+    gameState = STATE_MENU_MAIN;
+    startMainMenu = false;
     gameFrame = 0;
+    level = 0;
   }
 }
 

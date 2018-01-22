@@ -193,6 +193,7 @@ void updatePlayer() {
     player.frame++;
     if (player.frame > 10) {
       gameState = STATE_GAME_OVER;
+      gameFrame = 0;
     }
   }
 
